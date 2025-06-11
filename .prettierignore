@@ -1,0 +1,24 @@
+# 의존성 및 빌드 결과물
+node_modules/
+dist/
+build/
+
+# 패키지 매니저 
+package-lock.json
+yarn.lock
+
+# 정적 데이터
+data/
+
+# 로그 파일
+*.log
+
+# 환경 설정
+.env*
+
+# IDE
+.vscode/
+
+# OS 파일
+.DS_Store
+Thumbs.db
