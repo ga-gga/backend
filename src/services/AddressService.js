@@ -37,7 +37,7 @@ class AddressService {
     if (!addressData) return [];
 
     return addressData.gus
-      .map(gu => ({
+      .map((gu) => ({
         name: gu.name,
         code: gu.code,
         dongCount: gu.dongs.length,
@@ -52,7 +52,7 @@ class AddressService {
     }
 
     return gu.dongs
-      .map(dong => ({
+      .map((dong) => ({
         name: dong.name,
         code: dong.code,
       }))
