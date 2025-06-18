@@ -17,10 +17,10 @@ class DataLoader {
       const addressData = {
         city: seoulData.city,
         code: seoulData.code,
-        gus: seoulData.gus.map(gu => ({
+        gus: seoulData.gus.map((gu) => ({
           name: gu.gu,
           code: gu.code,
-          dongs: gu.dongs.map(dong => ({
+          dongs: gu.dongs.map((dong) => ({
             name: dong.dong,
             code: dong.code,
           })),
@@ -30,7 +30,7 @@ class DataLoader {
       const result = await this.addressService.saveAddressSystem(addressData);
 
       console.log(
-        `Seoul address data loaded successfully - Gu: ${result.stats.totalGus}, Dong: ${result.stats.totalDongs}`
+        `Seoul address data loaded successfully - Gu: ${result.stats.totalGus}, Dong: ${result.stats.totalDongs}`,
       );
 
       return result.stats;

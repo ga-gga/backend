@@ -2,9 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/ga_gga'
-    );
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ga_gga');
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
@@ -17,7 +15,7 @@ mongoose.connection.on('connected', () => {
   console.log('Mongoose connected to MongoDB');
 });
 
-mongoose.connection.on('error', err => {
+mongoose.connection.on('error', (err) => {
   console.error('Mongoose connection error:', err);
 });
 

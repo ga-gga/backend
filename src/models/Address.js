@@ -12,7 +12,7 @@ const dongSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const guSchema = new mongoose.Schema(
@@ -28,7 +28,7 @@ const guSchema = new mongoose.Schema(
     },
     dongs: [dongSchema],
   },
-  { _id: false }
+  { _id: false },
 );
 
 const addressSchema = new mongoose.Schema(
@@ -43,7 +43,7 @@ const addressSchema = new mongoose.Schema(
     },
     gus: [guSchema],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 addressSchema.index({ code: 1 });

@@ -1,23 +1,26 @@
 {
-  "name": "backend",
+  "name": "ga-gga-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Backend API server for ga-gga team project",
+  "main": "server.js",
+  "private": true,
   "scripts": {
     "start": "node server.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ga-gga/backend.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ga-gga/backend/issues"
   },
   "homepage": "https://github.com/ga-gga/backend#readme",
+  "engines": {
+    "node": ">=23.0.0"
+  },
   "dependencies": {
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
