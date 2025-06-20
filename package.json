@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "start": "node server.js",
+    "start:prod": "node -r dotenv/config server.js dotenv_config_path=.env.prod",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
