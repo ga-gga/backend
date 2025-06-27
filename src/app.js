@@ -3,6 +3,9 @@ const connectDB = require('./config/database');
 const dataLoader = require('./util/dataLoader');
 const AddressService = require('./services/AddressService');
 
+const koreanAddressLoader = require('./util/KoreanAddressLoader');
+const koreanAddressRoutes = require('./routes/koreanAddressRoutes');
+
 const app = express();
 const addressService = new AddressService();
 
@@ -10,6 +13,7 @@ const initializeApp = async () => {
   try {
     await connectDB();
     await dataLoader.loadAllStaticData();
+    await koreanAddressLoader.loadStart();
     console.log('Application initialized successfully');
   } catch (error) {
     console.error(`Failed to initialize application: ${error.message}`);
@@ -34,9 +38,13 @@ app.get('/', (req, res) => {
       neighborhoods: '/address/dongs/:guCode',
       addressInfo: '/address/info/:code',
       health: '/health',
+      CheckAddressData: '/regions/exists',
+      FullAddressByAdministrativeDistrict: '/regions',
     },
   });
 });
+
+app.use('/regions', koreanAddressRoutes);
 
 app.get('/health', (req, res) => {
   res.json({
