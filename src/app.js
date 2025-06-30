@@ -1,47 +1,45 @@
 const express = require('express');
-const connectDB = require('./config/database');
-const koreanAddressLoader = require('./util/KoreanAddressLoader');
-
 const errorMiddleware = require('./middleware/errorMiddleware');
-
 const koreanAddressRoutes = require('./routes/koreanAddressRoutes');
+const { initializeApp } = require('./utils/appInitializer');
 
-const app = express();
+const createApp = () => {
+  const app = express();
 
-const initializeApp = async () => {
+  app.use(express.json());
+
+  app.get('/', (req, res) => {
+    res.json({
+      message: 'ga-gga Server API',
+      version: '1.0.0',
+      endpoints: {
+        CheckAddressData: '/regions/exists',
+        FullAddressByAdministrativeDistrict: '/regions',
+      },
+    });
+  });
+
+  app.use('/regions', koreanAddressRoutes);
+
+  app.use((req, res, next) => {
+    const error = new Error('Endpoint not found');
+    error.status = 404;
+    next(error);
+  });
+
+  app.use(errorMiddleware);
+
+  return app;
+};
+
+const startApplication = async () => {
   try {
-    await connectDB();
-    await koreanAddressLoader.loadStart();
-    console.log('Application initialized successfully');
+    await initializeApp();
+    return createApp();
   } catch (error) {
-    console.error(`Failed to initialize application: ${error.message}`);
+    console.error(error.message);
     process.exit(1);
   }
 };
 
-initializeApp();
-
-app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.json({
-    message: 'ga-gga Server API',
-    version: '1.0.0',
-    endpoints: {
-      CheckAddressData: '/regions/exists',
-      FullAddressByAdministrativeDistrict: '/regions',
-    },
-  });
-});
-
-app.use('/regions', koreanAddressRoutes);
-
-app.use((req, res, next) => {
-  const error = new Error('Endpoint not found');
-  error.status = 404;
-  next(error);
-});
-
-app.use(errorMiddleware);
-
-module.exports = app;
+module.exports = { createApp, startApplication };
