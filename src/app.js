@@ -2,6 +2,8 @@ const express = require('express');
 const connectDB = require('./config/database');
 const koreanAddressLoader = require('./util/KoreanAddressLoader');
 
+const errorMiddleware = require('./middleware/errorMiddleware');
+
 const koreanAddressRoutes = require('./routes/koreanAddressRoutes');
 
 const app = express();
@@ -17,13 +19,10 @@ const initializeApp = async () => {
   }
 };
 
-// Initialize application
 initializeApp();
 
-// Middleware
 app.use(express.json());
 
-// Routes
 app.get('/', (req, res) => {
   res.json({
     message: 'ga-gga Server API',
@@ -37,21 +36,12 @@ app.get('/', (req, res) => {
 
 app.use('/regions', koreanAddressRoutes);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err);
-  res.status(500).json({
-    success: false,
-    error: 'Internal server error',
-  });
+app.use((req, res, next) => {
+  const error = new Error('Endpoint not found');
+  error.status = 404;
+  next(error);
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    error: 'Endpoint not found',
-  });
-});
+app.use(errorMiddleware);
 
 module.exports = app;
