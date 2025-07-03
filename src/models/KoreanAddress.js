@@ -6,7 +6,7 @@ const koreanAddressSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      match: /^\d{10}$/, // match : only validated when the value exists (null, undefined passes verification)-> Can only be used in essential fields
+      match: /^\d{10}$/,
     },
     name: {
       type: String,

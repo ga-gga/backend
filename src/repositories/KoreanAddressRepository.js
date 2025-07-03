@@ -1,11 +1,6 @@
 const KoreanAddress = require('../models/KoreanAddress');
 
 class KoreanAddressRepository {
-  /**
-   * Checks if the KoreanAddress collection has any data.
-   * @returns {Promise<boolean>} True if there is data, false otherwise.
-   * @throws {Error} If there is an error while checking the data.
-   */
   async hasData() {
     try {
       const count = await KoreanAddress.estimatedDocumentCount();
@@ -15,12 +10,6 @@ class KoreanAddressRepository {
     }
   }
 
-  /**
-   * Saves multiple address data objects to the KoreanAddress collection.
-   * @param {Array} addressDataArray - An array of address data objects to be saved.
-   * @returns {Promise<Array>} An array of saved address data objects.
-   * @throws {Error} If there is an error while saving the data.
-   */
   async saveMany(addressDataArray) {
     try {
       return await KoreanAddress.insertMany(addressDataArray, { ordered: false });
@@ -29,11 +18,6 @@ class KoreanAddressRepository {
     }
   }
 
-  /**
-   * Retrieves all address data from the KoreanAddress collection.
-   * @returns {Promise<Array>} An array of all address data objects.
-   * @throws {Error} If there is an error while retrieving the data.
-   */
   async findGroupByLevel() {
     try {
       return await KoreanAddress.aggregate([

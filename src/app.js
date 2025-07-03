@@ -24,7 +24,7 @@ const createApp = () => {
   app.use((req, res, next) => {
     const error = new Error('Endpoint not found');
     error.status = 404;
-    next(error);
+    res.status(error.status).json({ error: error.message });
   });
 
   app.use(errorMiddleware);
