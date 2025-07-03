@@ -1,7 +1,7 @@
 const express = require('express');
 const errorMiddleware = require('./middleware/errorMiddleware');
 const koreanAddressRoutes = require('./routes/koreanAddressRoutes');
-const { initializeApp } = require('./utils/appInitializer');
+const { initializeDatabase, initializeStaticData } = require('./utils/appInitializer');
 
 const createApp = () => {
   const app = express();
@@ -34,7 +34,8 @@ const createApp = () => {
 
 const startApplication = async () => {
   try {
-    await initializeApp();
+    await initializeDatabase();
+    await initializeStaticData();
     return createApp();
   } catch (error) {
     console.error(error.message);
