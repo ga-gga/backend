@@ -1,6 +1,7 @@
 const express = require('express');
 const errorMiddleware = require('./middleware/errorMiddleware');
 const koreanAddressRoutes = require('./routes/koreanAddressRoutes');
+const apiMetadataRoutes = require('./routes/apiMetadataRoutes');
 const { initializeDatabase, initializeStaticData } = require('./utils/appInitializer');
 
 const createApp = () => {
@@ -20,6 +21,7 @@ const createApp = () => {
   });
 
   app.use('/regions', koreanAddressRoutes);
+  app.use('/api-metadata', apiMetadataRoutes);
 
   app.use((req, res, next) => {
     const error = new Error('Endpoint not found');
