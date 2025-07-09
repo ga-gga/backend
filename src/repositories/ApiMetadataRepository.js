@@ -1,4 +1,4 @@
-const ApiMetadata = require('../models/ApiMetadata');
+const ApiMetadata = require('../models/apiMetadata');
 
 class ApiMetadataRepository {
   async create(apiMetadataData) {

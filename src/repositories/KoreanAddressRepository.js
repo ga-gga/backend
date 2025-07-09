@@ -1,4 +1,4 @@
-const KoreanAddress = require('../models/KoreanAddress');
+const KoreanAddress = require('../models/koreanAddress');
 
 class KoreanAddressRepository {
   async hasData() {
