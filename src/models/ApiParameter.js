@@ -30,6 +30,6 @@ const apiParameterSchema = new mongoose.Schema(
   },
 );
 
-apiParameterSchema.index({ apiMetadataId: 1, externalCode: 1 }, { unique: true });
+apiParameterSchema.index({ apiMetadataId: 1, externalCode: 1, koreanAddressCode: 1 }, { unique: true });
 
 module.exports = mongoose.model('ApiParameter', apiParameterSchema);

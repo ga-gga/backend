@@ -1,5 +1,6 @@
 const connectDB = require('../config/database');
 const koreanAddressLoader = require('./KoreanAddressLoader');
+const apiParameterLoader = require('./ApiParameterLoader');
 
 const initializeDatabase = async () => {
   try {
@@ -16,6 +17,7 @@ const initializeStaticData = async () => {
   try {
     console.log('Loading static data...');
     await koreanAddressLoader.loadStart();
+    await apiParameterLoader.loadStart();
     console.log('Static data loading completed');
   } catch (error) {
     console.error(`Static data loading failed: ${error.message}`);

@@ -1,0 +1,44 @@
+{
+  "apiName": "seoul_real_time_city_data",
+  "parameters": [
+    {
+      "code": "POI001",
+      "name": "강남 MICE 관광특구",
+      "koreanAddressCode": "1168010500"
+    },
+    {
+      "code": "POI002",
+      "name": "동대문 관광특구",
+      "koreanAddressCode": ["1114014500", "1114014600", "1114016200"]
+    },
+    {
+      "code": "POI008",
+      "name": "경복궁",
+      "koreanAddressCode": [
+        "1111010400",
+        "1111010500",
+        "1111010600",
+        "1111010700",
+        "1111013900",
+        "1111014200",
+        "1111014400",
+        "1111012500"
+      ]
+    },
+    {
+      "code": "POI014",
+      "name": "강남역",
+      "koreanAddressCode": ["1168010100", "1165010800"]
+    },
+    {
+      "code": "POI074",
+      "name": "영등포 타임스퀘어",
+      "koreanAddressCode": ["1156010400", "1156010500", "1156010100"]
+    },
+    {
+      "code": "POI085",
+      "name": "강서한강공원",
+      "koreanAddressCode": "1150010900"
+    }
+  ]
+}
