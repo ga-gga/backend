@@ -28,7 +28,7 @@ class KoreanAddressRepository {
           $group: {
             _id: '$level',
             addresses: {
-              $push: { code: '$code', name: '$name', parentCode: '$parentCode' },
+              $push: { id: '$_id', name: '$name', parentCode: '$parentCode' },
             },
           },
         },

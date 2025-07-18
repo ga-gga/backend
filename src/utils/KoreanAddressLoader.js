@@ -54,7 +54,7 @@ class KoreanAddressLoader {
       const parentCode = this.determineParentCode(code, level);
 
       transformedData.push({
-        code,
+        _id: code,
         name,
         level,
         parentCode,
