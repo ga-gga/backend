@@ -39,39 +39,36 @@ class ApiParameterService {
     const validationErrors = [];
 
     for (const param of parameters) {
-      const { code, name, koreanAddressCode } = param;
+      const { code, name, koreanAddressCode, address } = param;
 
-      if (!code || !name) {
+      if (!code || !name || !address) {
         validationErrors.push(`Missing fields in parameter: ${JSON.stringify(param)}`);
         continue;
       }
 
+      let koreanAddressCodes = [];
       if (Array.isArray(koreanAddressCode)) {
-        for (const koreanCode of koreanAddressCode) {
-          transformedData.push({
-            externalCode: code,
-            name,
-            koreanAddressCode: koreanCode,
-            apiMetadataId,
-            isActive: true,
-          });
-        }
+        koreanAddressCodes = koreanAddressCode;
       } else if (koreanAddressCode) {
-        transformedData.push({
-          externalCode: code,
-          name,
-          koreanAddressCode,
-          apiMetadataId,
-          isActive: true,
-        });
+        koreanAddressCodes = [koreanAddressCode];
       } else {
         validationErrors.push(`Invalid Korean address code: ${koreanAddressCode} for ${code}`);
+        continue;
       }
+
+      transformedData.push({
+        externalCode: code,
+        name,
+        address,
+        koreanAddressCodes,
+        apiMetadataId,
+        isActive: true,
+      });
     }
 
     if (validationErrors.length > 0) {
       console.warn('Validation warnings during transformation:');
-      validationErrors.forEach((error) => console.warn(`- ${error}}`));
+      validationErrors.forEach((error) => console.warn(`- ${error}`));
     }
 
     return transformedData;

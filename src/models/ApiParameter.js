@@ -10,15 +10,22 @@ const apiParameterSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    address: {
+      type: String,
+      required: true,
+    },
     isActive: {
       type: Boolean,
       default: true,
     },
-    koreanAddressCode: {
-      type: String,
-      ref: 'KoreanAddress',
-      match: /^\d{10}$/,
-    },
+    koreanAddressCodes: [
+      {
+        type: String,
+        ref: 'KoreanAddress',
+        required: true,
+        match: /^\d{10}$/,
+      },
+    ],
     apiMetadataId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'ApiMetadata',
@@ -30,6 +37,7 @@ const apiParameterSchema = new mongoose.Schema(
   },
 );
 
-apiParameterSchema.index({ apiMetadataId: 1, externalCode: 1, koreanAddressCode: 1 }, { unique: true });
+apiParameterSchema.index({ apiMetadataId: 1, externalCode: 1 }, { unique: true });
+apiParameterSchema.index({ koreanAddressCodes: 1 });
 
 module.exports = mongoose.model('ApiParameter', apiParameterSchema);

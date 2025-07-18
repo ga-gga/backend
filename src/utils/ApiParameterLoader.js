@@ -58,7 +58,9 @@ class ApiParameterLoader {
       const { apiName, parameters } = fileData;
       const result = await this.ApiParameterService.saveApiParameters(apiName, parameters);
 
-      console.log(`data loaded successfully: ${result}`);
+      console.log(`Data loaded successfully for ${apiName}:`);
+      console.log(`- Requested parameters: ${result.requested}`);
+      console.log(`- Saved records: ${result.saved}`);
     } catch (error) {
       console.error(`Failed to load data: ${error.message}`);
       throw error;
