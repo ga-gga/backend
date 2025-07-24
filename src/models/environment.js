@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const populate = require('./sub/populate');
-const populationForecast = require('./sub/populationForecast');
-const weather = require('./sub/weather');
-const weatherForecast = require('./sub/weatherForecast');
+const populationSchema = require('./sub/population');
+const populationForecastSchema = require('./sub/populationForecast');
+const weatherSchema = require('./sub/weather');
+const weatherForecastSchema = require('./sub/weatherForecast');
 
 const environmentSchema = new mongoose.Schema(
   {
@@ -37,10 +37,10 @@ const environmentSchema = new mongoose.Schema(
         },
       ],
     },
-    populate: populate,
-    populationForecast: [populationForecast],
-    weather: weather,
-    weatherForecast: [weatherForecast],
+    population: populationSchema,
+    populationForecast: [populationForecastSchema],
+    weather: weatherSchema,
+    weatherForecast: [weatherForecastSchema],
   },
   {
     timestamps: true,

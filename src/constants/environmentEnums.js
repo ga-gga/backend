@@ -10,6 +10,7 @@ const PRECIPITATION_TYPES = {
   RAIN: 'rain',
   SNOW: 'snow',
   DRIZZLE: 'drizzle',
+  SHOWER: 'shower',
 };
 
 const SKY_TYPES = {
