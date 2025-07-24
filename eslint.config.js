@@ -36,7 +36,7 @@ module.exports = [
 
       'no-var': 'error',
       'prefer-const': 'error',
-      'no-console': 'warn',
+      /* 'no-console': 'warn', */
       eqeqeq: ['error', 'always'],
       'no-unused-vars': [
         'error',
