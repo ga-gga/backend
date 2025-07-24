@@ -2,7 +2,7 @@ const express = require('express');
 const errorMiddleware = require('./middleware/errorMiddleware');
 const koreanAddressRoutes = require('./routes/koreanAddressRoutes');
 const apiMetadataRoutes = require('./routes/apiMetadataRoutes');
-const { initializeDatabase, initializeStaticData, initializeScheduler } = require('./utils/appInitializer');
+const { initializeDatabase, initializeStaticData, initializeScheduler } = require('./utils/loaders/appInitializer');
 
 const createApp = () => {
   const app = express();

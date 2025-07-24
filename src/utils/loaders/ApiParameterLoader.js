@@ -1,10 +1,10 @@
 const fs = require('fs').promises;
 const path = require('path');
-const ApiParameterService = require('../services/ApiParameterService');
+const ApiParameterService = require('../../services/ApiParameterService');
 
 class ApiParameterLoader {
   constructor() {
-    this.dataPath = path.join(__dirname, '../../data');
+    this.dataPath = path.join(__dirname, '../../../data');
     this.fileName = 'seoul_real_time_city_data_parameter.json';
     this.ApiParameterService = new ApiParameterService();
   }

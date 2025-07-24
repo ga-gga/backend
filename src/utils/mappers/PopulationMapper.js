@@ -1,6 +1,6 @@
 const { CONGESTION } = require('../../constants/apiResponseEnum');
-const { createEnumMapper } = require('../enumMapper');
-const { safeParseInt, safeParseFloat, transformDateString } = require('../parsers');
+const { createEnumMapper } = require('../helpers/enumMapper');
+const { safeParseInt, safeParseFloat, transformDateString } = require('../helpers/parsers');
 
 class PopulationMapper {
   constructor() {

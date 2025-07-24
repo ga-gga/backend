@@ -1,6 +1,6 @@
 const { PRECIPITATION, SKY, LEVEL, QUALITY } = require('../../constants/apiResponseEnum');
-const { createEnumMapper } = require('../enumMapper');
-const { safeParseFloat, safeParseInt, transformDateString, transformTimestamp } = require('../parsers');
+const { createEnumMapper } = require('../helpers/enumMapper');
+const { safeParseFloat, safeParseInt, transformDateString, transformTimestamp } = require('../helpers/parsers');
 
 class WeatherMapper {
   constructor() {

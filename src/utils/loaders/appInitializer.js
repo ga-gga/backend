@@ -1,7 +1,7 @@
-const connectDB = require('../config/database');
+const connectDB = require('../../config/database');
 const koreanAddressLoader = require('./KoreanAddressLoader');
 const apiParameterLoader = require('./ApiParameterLoader');
-const DataScheduler = require('../scheduler/DataScheduler');
+const DataScheduler = require('../../scheduler/DataScheduler');
 
 const initializeDatabase = async () => {
   try {

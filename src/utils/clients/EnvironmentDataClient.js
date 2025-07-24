@@ -1,7 +1,7 @@
 const axios = require('axios');
-const EnvironmentDataService = require('../services/EnvironmentService');
-const EnvironmentDataMapper = require('./mappers/EnvironmentDataMapper');
-const ApiParameterService = require('../services/ApiParameterService');
+const EnvironmentDataService = require('../../services/EnvironmentService');
+const EnvironmentDataMapper = require('../mappers/EnvironmentDataMapper');
+const ApiParameterService = require('../../services/ApiParameterService');
 
 class EnvironmentDataClient {
   constructor() {

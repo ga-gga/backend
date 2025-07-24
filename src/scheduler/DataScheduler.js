@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-const EnvironmentDataClient = require('../utils/EnvironmentDataClient');
+const EnvironmentDataClient = require('../utils/clients/EnvironmentDataClient');
 const ApiMetadataService = require('../services/ApiMetadataService');
 
 class DataScheduler {
