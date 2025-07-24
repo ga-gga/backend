@@ -10,9 +10,15 @@ class ApiMetadataRepository {
     }
   }
 
-  async findByName(name) {
+  async findByName(name, options = {}) {
     try {
-      return await ApiMetadata.findOne({ name });
+      const query = { name };
+
+      if (options.isActive !== undefined) {
+        query.isActive = options.isActive;
+      }
+
+      return await ApiMetadata.findOne(query);
     } catch (error) {
       throw new Error(`Failed to find API metadata by name: ${error.message}`);
     }

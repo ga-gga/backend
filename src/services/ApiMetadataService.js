@@ -33,6 +33,10 @@ class ApiMetadataService {
   async getAllApiMetadata() {
     return await this.apiMetadataRepository.findAll();
   }
+
+  async getApiMetadataByName(name, { isActive } = {}) {
+    return await this.apiMetadataRepository.findByName(name, { isActive });
+  }
 }
 
 module.exports = ApiMetadataService;

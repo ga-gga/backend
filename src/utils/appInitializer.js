@@ -1,6 +1,7 @@
 const connectDB = require('../config/database');
 const koreanAddressLoader = require('./KoreanAddressLoader');
 const apiParameterLoader = require('./ApiParameterLoader');
+const DataScheduler = require('../scheduler/DataScheduler');
 
 const initializeDatabase = async () => {
   try {
@@ -25,4 +26,14 @@ const initializeStaticData = async () => {
   }
 };
 
-module.exports = { initializeDatabase, initializeStaticData };
+const initializeScheduler = () => {
+  try {
+    console.log('Starting Data Scheduler...');
+    const scheduler = new DataScheduler();
+    scheduler.start();
+  } catch (error) {
+    console.error(`Scheduler failed: ${error.message}`);
+  }
+};
+
+module.exports = { initializeDatabase, initializeStaticData, initializeScheduler };
