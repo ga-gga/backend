@@ -25,6 +25,14 @@ class ApiParameterRepository {
       throw new Error(`Failed to count ApiParameter by apiMetadataId: ${error.message}`);
     }
   }
+
+  async findByApiMetadata(apiMetadataId) {
+    try {
+      return await ApiParameter.find({ apiMetadataId });
+    } catch (error) {
+      throw new Error(`Failed to find ApiParameter: ${error.message}`);
+    }
+  }
 }
 
 module.exports = ApiParameterRepository;

@@ -73,6 +73,10 @@ class ApiParameterService {
 
     return transformedData;
   }
+
+  async getApiParametersByMetadataId(apiMetadataId) {
+    return await this.apiParameterRepository.findByApiMetadata(apiMetadataId);
+  }
 }
 
 module.exports = ApiParameterService;
