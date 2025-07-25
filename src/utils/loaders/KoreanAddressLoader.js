@@ -1,10 +1,10 @@
 const fs = require('fs').promises;
 const path = require('path');
-const KoreanAddressService = require('../services/KoreanAddressService');
+const KoreanAddressService = require('../../services/KoreanAddressService');
 
 class KoreanAddressLoader {
   constructor() {
-    this.dataPath = path.join(__dirname, '../../data');
+    this.dataPath = path.join(__dirname, '../../../data');
     this.koreanAddressService = new KoreanAddressService();
   }
 
@@ -54,7 +54,7 @@ class KoreanAddressLoader {
       const parentCode = this.determineParentCode(code, level);
 
       transformedData.push({
-        code,
+        _id: code,
         name,
         level,
         parentCode,
