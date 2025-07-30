@@ -2,10 +2,9 @@ const mongoose = require('mongoose');
 
 const koreanAddressSchema = new mongoose.Schema(
   {
-    code: {
+    _id: {
       type: String,
       required: true,
-      unique: true,
       match: /^\d{10}$/,
     },
     name: {
@@ -30,6 +29,7 @@ const koreanAddressSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    _id: false,
   },
 );
 
