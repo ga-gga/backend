@@ -8,7 +8,8 @@ class EnvironmentService {
   async saveEnvironmentData(apiParameterId, transformedData) {
     try {
       if (!transformedData) {
-        throw new Error('No data to save');
+        const errorAttribute = this.createErrorAttribute(apiParameterId, new Error('No data available'));
+        return await this.environmentRepository.save(errorAttribute);
       }
 
       return await this.environmentRepository.save(transformedData);

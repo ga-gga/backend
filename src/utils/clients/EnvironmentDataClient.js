@@ -28,13 +28,7 @@ class EnvironmentDataClient {
 
     client.interceptors.response.use(
       (response) => response,
-      (error) => {
-        console.error(`API Call Failed:`, {
-          status: error.response?.status,
-          message: error.message,
-        });
-        return Promise.reject(error);
-      },
+      (error) => Promise.reject(error),
     );
 
     return client;
@@ -99,7 +93,6 @@ class EnvironmentDataClient {
         timestamp: new Date().toISOString(),
       };
     } catch (error) {
-      console.error(`Failed to fetch data for parameter ${parameter.externalCode}:`, error.message);
       return this.createFailedResponse(parameter, error);
     }
   }
@@ -157,7 +150,8 @@ class EnvironmentDataClient {
       if (r.success) {
         apiSuccessful++;
       } else {
-        apiFailures.push(`Call Api: ${r.error}`);
+        const poiCode = r.parameter?.externalCode || 'UNKNOWN';
+        apiFailures.push(`Call Api [${poiCode}]: ${r.error}`);
       }
     });
 
@@ -168,7 +162,8 @@ class EnvironmentDataClient {
       if (r.status === 'fulfilled' && r.value?.success) {
         processingSuccessful++;
       } else {
-        processingFailures.push(`Processing: ${r.value?.error || r.reason?.message || 'Unknown'}`);
+        const poiCode = r.value?.parameterCode || 'UNKNOWN';
+        processingFailures.push(`Processing [${poiCode}]: ${r.value?.error || r.reason?.message || 'Unknown'}`);
       }
     });
 
