@@ -14,6 +14,14 @@ const apiParameterSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    imageUrl: {
+      type: String,
+      default: 'https://..',
+    },
+    description: {
+      type: String,
+      default: '',
+    },
     isActive: {
       type: Boolean,
       default: true,
@@ -38,6 +46,5 @@ const apiParameterSchema = new mongoose.Schema(
 );
 
 apiParameterSchema.index({ apiMetadataId: 1, externalCode: 1 }, { unique: true });
-apiParameterSchema.index({ koreanAddressCodes: 1 });
 
 module.exports = mongoose.model('ApiParameter', apiParameterSchema);

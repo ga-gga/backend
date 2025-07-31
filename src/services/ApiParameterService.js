@@ -39,7 +39,7 @@ class ApiParameterService {
     const validationErrors = [];
 
     for (const param of parameters) {
-      const { code, name, koreanAddressCode, address } = param;
+      const { code, name, koreanAddressCode, address, imageUrl, description } = param;
 
       if (!code || !name || !address) {
         validationErrors.push(`Missing fields in parameter: ${JSON.stringify(param)}`);
@@ -62,6 +62,8 @@ class ApiParameterService {
         address,
         koreanAddressCodes,
         apiMetadataId,
+        imageUrl,
+        description,
         isActive: true,
       });
     }
