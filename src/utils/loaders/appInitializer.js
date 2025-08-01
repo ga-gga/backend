@@ -27,6 +27,11 @@ const initializeStaticData = async () => {
 };
 
 const initializeScheduler = () => {
+  if (process.env.NODE_ENV === 'local') {
+    console.log('Scheduler disabled in local environment');
+    return;
+  }
+
   try {
     console.log('Starting Data Scheduler...');
     const scheduler = new DataScheduler();
