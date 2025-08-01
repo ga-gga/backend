@@ -5,39 +5,40 @@ const DataScheduler = require('../../scheduler/DataScheduler');
 
 const initializeDatabase = async () => {
   try {
-    console.log('Connecting to database...');
+    console.log('[DB] Connecting to database...');
     await connectDB();
-    console.log('Database connection established');
+    console.log('[DB] Database connection established\n');
   } catch (error) {
-    console.error(`Database connection failed: ${error.message}`);
+    console.error(`[DB] Database connection failed: ${error.message}`);
     throw error;
   }
 };
 
 const initializeStaticData = async () => {
   try {
-    console.log('Loading static data...');
+    console.log('[DATA] Loading static data...');
     await koreanAddressLoader.loadStart();
     await apiParameterLoader.loadStart();
-    console.log('Static data loading completed');
+    console.log('[DATA] Static data loading completed\n');
   } catch (error) {
-    console.error(`Static data loading failed: ${error.message}`);
+    console.error(`[DATA] Static data loading failed: ${error.message}`);
     throw error;
   }
 };
 
 const initializeScheduler = () => {
   if (process.env.NODE_ENV === 'local') {
-    console.log('Scheduler disabled in local environment');
+    console.log('[SCHEDULER] Scheduler disabled in local environment\n');
     return;
   }
 
   try {
-    console.log('Starting Data Scheduler...');
+    console.log('[SCHEDULER] Starting Data Scheduler...');
     const scheduler = new DataScheduler();
     scheduler.start();
+    console.log('[SCHEDULER] Data Scheduler started\n');
   } catch (error) {
-    console.error(`Scheduler failed: ${error.message}`);
+    console.error(`[SCHEDULER] Scheduler failed: ${error.message}`);
   }
 };
 

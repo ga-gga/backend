@@ -10,7 +10,7 @@ class ApiParameterLoader {
   }
 
   async loadStart() {
-    console.log('Loading API parameter data...');
+    console.log('  ↳ Loading API parameter data...');
 
     try {
       const fileData = await this.readFile();
@@ -18,13 +18,13 @@ class ApiParameterLoader {
 
       const isInitialized = await this.ApiParameterService.isInitializedByApiName(apiName);
       if (isInitialized) {
-        console.log(`${apiName}' already loaded, skipping...`);
+        console.log(`  ↳ ${apiName}' already loaded, skipping...`);
         return;
       }
 
       await this.loadData(fileData);
     } catch (error) {
-      console.error(`Failed to load data: ${error.message}`);
+      console.error(`  ↳ Failed to load data: ${error.message}`);
     }
   }
 
@@ -42,7 +42,7 @@ class ApiParameterLoader {
         throw new Error('Missing parameters filed.');
       }
 
-      console.log(`Read ${this.fileName} file, ${fileData.parameters.length} exist`);
+      console.log(`    - Read ${this.fileName} file, ${fileData.parameters.length} exist`);
 
       return fileData;
     } catch (error) {
@@ -58,9 +58,9 @@ class ApiParameterLoader {
       const { apiName, parameters } = fileData;
       const result = await this.ApiParameterService.saveApiParameters(apiName, parameters);
 
-      console.log(`Data loaded successfully for ${apiName}:`);
-      console.log(`- Requested parameters: ${result.requested}`);
-      console.log(`- Saved records: ${result.saved}`);
+      console.log(`    - Data loaded successfully for ${apiName}:`);
+      console.log(`      · Requested parameters: ${result.requested}`);
+      console.log(`      · Saved records: ${result.saved}`);
     } catch (error) {
       console.error(`Failed to load data: ${error.message}`);
       throw error;

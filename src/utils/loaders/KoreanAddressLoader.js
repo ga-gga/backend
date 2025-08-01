@@ -9,21 +9,21 @@ class KoreanAddressLoader {
   }
 
   async loadStart() {
-    console.log('Loading Korean address data...');
+    console.log('  ↳ Loading Korean address data...');
 
     try {
       const isInitialized = await this.koreanAddressService.isInitialized();
       if (isInitialized) {
-        console.log('Korean address data already loaded, skipping...');
+        console.log('  ↳ Korean address data already loaded, skipping...');
         return;
       }
 
       await this.loadAddressData();
 
       const stats = await this.koreanAddressService.getStatistics();
-      console.log('Korean address data loading completed:', stats);
+      console.log('  ↳ Korean address data loading completed:', stats);
     } catch (error) {
-      console.error(`Failed to load Korean address data: ${error.message}`);
+      console.error(`  ↳ Failed to load Korean address data: ${error.message}`);
       throw error;
     }
   }
@@ -36,7 +36,7 @@ class KoreanAddressLoader {
       const transformedData = this.transformData(addresses);
       const result = await this.koreanAddressService.saveAddresses(transformedData);
 
-      console.log(`address data loaded successfully - Total: ${result.saved}/${result.requested}`);
+      console.log(`    - address data loaded successfully - Total: ${result.saved}/${result.requested}`);
 
       return result;
     } catch (error) {
