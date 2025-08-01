@@ -2,6 +2,7 @@ const express = require('express');
 const errorMiddleware = require('./middleware/errorMiddleware');
 const koreanAddressRoutes = require('./routes/koreanAddressRoutes');
 const apiMetadataRoutes = require('./routes/apiMetadataRoutes');
+const mainRoutes = require('./routes/mainRoutes');
 const contentFilterRoutes = require('./routes/contentFilterRoutes');
 const { initializeDatabase, initializeStaticData, initializeScheduler } = require('./utils/loaders/appInitializer');
 
@@ -23,6 +24,7 @@ const createApp = () => {
 
   app.use('/regions', koreanAddressRoutes);
   app.use('/api-metadata', apiMetadataRoutes);
+  app.use('/main', mainRoutes);
   app.use('/content-filters', contentFilterRoutes);
 
   app.use((req, res, next) => {
