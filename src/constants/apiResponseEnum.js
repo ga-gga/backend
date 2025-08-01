@@ -1,4 +1,4 @@
-const { CONGESTION_LEVELS, PRECIPITATION_TYPES, SKY_TYPES } = require('./environmentEnums');
+const { CONGESTION_LEVELS, PRECIPITATION_TYPES, SKY_TYPES } = require('./environmentEnum');
 
 const CONGESTION = {
   '붐빔': CONGESTION_LEVELS.CROWDED,

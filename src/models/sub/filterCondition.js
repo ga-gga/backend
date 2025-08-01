@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { CONGESTION_LEVELS, SKY_TYPES } = require('../../constants/environmentEnums');
+const { CONGESTION_LEVELS, SKY_TYPES } = require('../../constants/environmentEnum');
 
 const filterConditionSchema = new mongoose.Schema(
   {

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { CONGESTION_LEVELS } = require('../../constants/environmentEnums');
+const { CONGESTION_LEVELS } = require('../../constants/environmentEnum');
 
 const populationSchema = new mongoose.Schema(
   {
