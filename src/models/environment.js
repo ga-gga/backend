@@ -15,7 +15,7 @@ const environmentSchema = new mongoose.Schema(
       type: Date,
       required: true,
       default: Date.now,
-      index: { expireAfterSeconds: 12 * 60 * 60 },
+      index: { expireAfterSeconds: 60 * 30 },
     },
     dataStatus: {
       isComplete: {
