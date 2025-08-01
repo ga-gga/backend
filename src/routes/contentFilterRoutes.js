@@ -1,15 +1,28 @@
 const express = require('express');
-const ContentFilterController = require('../controllers/ContentFilterController');
+const ContentFilterService = require('../services/ContentFilterService');
 
 const router = express.Router();
-const contentFilterController = new ContentFilterController();
+const contentFilterService = new ContentFilterService();
 
-router.post('/', (req, res, next) => {
-  contentFilterController.createContentFilter(req, res, next);
+router.post('/', async (req, res, next) => {
+  try {
+    const contentFilterData = req.body;
+    const createdContentFilter = await contentFilterService.createContentFilter(contentFilterData);
+    res.status(201).json(createdContentFilter);
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.put('/:id', (req, res, next) => {
-  contentFilterController.updateContentFilter(req, res, next);
+router.put('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+    const updatedContentFilter = await contentFilterService.updateContentFilter(id, updateData);
+    res.json(updatedContentFilter);
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

@@ -1,11 +1,16 @@
 const express = require('express');
-const MainController = require('../controllers/MainController');
+const MainService = require('../services/MainService');
 
 const router = express.Router();
-const mainController = new MainController();
+const mainService = new MainService();
 
-router.get('/', (req, res, next) => {
-  mainController.getMainData(req, res, next);
+router.get('/', async (req, res, next) => {
+  try {
+    const mainData = await mainService.getMainData();
+    res.json(mainData);
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

@@ -1,12 +1,17 @@
 const express = require('express');
-const UtilController = require('../controllers/UtilController');
+const EnvironmentDataGeneratorService = require('../utils/services/EnvironmentDataGeneratorService');
 
 const router = express.Router();
-const utilController = new UtilController();
+const environmentDataGeneratorService = new EnvironmentDataGeneratorService();
 
 if (process.env.NODE_ENV === 'local') {
-  router.post('/environment-data', (req, res, next) => {
-    utilController.generateEnvironmentData(req, res, next);
+  router.post('/environment-data', async (req, res, next) => {
+    try {
+      const result = await environmentDataGeneratorService.generateEnvironmentData();
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
   });
 }
 
