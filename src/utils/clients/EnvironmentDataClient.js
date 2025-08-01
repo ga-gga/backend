@@ -129,6 +129,7 @@ class EnvironmentDataClient {
         parameterId,
         parameterCode,
         hasData: !!transformedData,
+        dataStatus: transformedData?.dataStatus,
         result,
       };
     } catch (error) {
@@ -156,11 +157,28 @@ class EnvironmentDataClient {
     });
 
     const processingFailures = [];
+    const dataQualityIssues = [];
     let processingSuccessful = 0;
+    let completeDataCount = 0;
 
     processingResults.forEach((r) => {
       if (r.status === 'fulfilled' && r.value?.success) {
         processingSuccessful++;
+        const dataStatus = r.value.dataStatus;
+
+        if (dataStatus?.isComplete) {
+          completeDataCount++;
+        } else if (dataStatus?.missingFields?.length > 0) {
+          const poiCode = r.value.parameterCode || 'UNKNOWN';
+          dataQualityIssues.push(`Incomplete data [${poiCode}]: missing ${dataStatus.missingFields.join(', ')}`);
+        }
+
+        if (dataStatus?.errors?.length > 0) {
+          const poiCode = r.value.parameterCode || 'UNKNOWN';
+          dataStatus.errors.forEach((error) => {
+            dataQualityIssues.push(`Data error [${poiCode}] ${error.field}: ${error.message}`);
+          });
+        }
       } else {
         const poiCode = r.value?.parameterCode || 'UNKNOWN';
         processingFailures.push(`Processing [${poiCode}]: ${r.value?.error || r.reason?.message || 'Unknown'}`);
@@ -172,12 +190,17 @@ class EnvironmentDataClient {
       stats: {
         api: { total: apiResponses.length, successful: apiSuccessful },
         processing: { total: processingResults.length, successful: processingSuccessful },
+        dataQuality: {
+          total: processingSuccessful,
+          complete: completeDataCount,
+          incomplete: processingSuccessful - completeDataCount,
+        },
       },
     };
 
-    const allFailures = [...apiFailures, ...processingFailures];
-    if (allFailures.length > 0) {
-      summary.failures = allFailures;
+    const allIssues = [...apiFailures, ...processingFailures, ...dataQualityIssues];
+    if (allIssues.length > 0) {
+      summary.issues = allIssues;
     }
 
     return summary;
