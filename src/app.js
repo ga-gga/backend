@@ -3,8 +3,7 @@ const errorMiddleware = require('./middleware/errorMiddleware');
 const koreanAddressRoutes = require('./routes/koreanAddressRoutes');
 const apiMetadataRoutes = require('./routes/apiMetadataRoutes');
 const mainRoutes = require('./routes/mainRoutes');
-const contentFilterRoutes = require('./routes/contentFilterRoutes');
-const utilRoutes = require('./routes/utilRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const { initializeDatabase, initializeStaticData, initializeScheduler } = require('./utils/loaders/appInitializer');
 
 const createApp = () => {
@@ -17,8 +16,20 @@ const createApp = () => {
       message: 'ga-gga Server API',
       version: '1.0.0',
       endpoints: {
-        CheckAddressData: '/regions/exists',
-        FullAddressByAdministrativeDistrict: '/regions',
+        regions: {
+          hierarchy: 'GET /regions/hierarchy',
+          check: 'GET /regions/check',
+        },
+        main: 'GET /main',
+        apiMetadata: 'GET /api-metadata',
+        admin: {
+          environmentData: 'POST /admin/environment-data',
+          apiMetadata: 'POST /admin/api-metadata',
+          contentFilters: {
+            create: 'POST /admin/content-filters',
+            update: 'PUT /admin/content-filters/:id',
+          },
+        },
       },
     });
   });
@@ -26,8 +37,7 @@ const createApp = () => {
   app.use('/regions', koreanAddressRoutes);
   app.use('/api-metadata', apiMetadataRoutes);
   app.use('/main', mainRoutes);
-  app.use('/content-filters', contentFilterRoutes);
-  app.use('/utils', utilRoutes);
+  app.use('/admin', adminRoutes);
 
   app.use((req, res, next) => {
     const error = new Error('Endpoint not found');

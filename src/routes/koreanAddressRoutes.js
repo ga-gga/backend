@@ -4,7 +4,7 @@ const KoreanAddressService = require('../services/KoreanAddressService');
 const router = express.Router();
 const koreanAddressService = new KoreanAddressService();
 
-router.get('/levels', async (req, res, next) => {
+router.get('/hierarchy', async (req, res, next) => {
   try {
     const groupedAddresses = await koreanAddressService.getGroupedAddresses();
     res.json(groupedAddresses);
