@@ -1,4 +1,6 @@
 const KoreanAddress = require('../models/koreanAddress');
+const DatabaseError = require('../errors/DatabaseError');
+const NotFoundError = require('../errors/NotFoundError');
 
 class KoreanAddressRepository {
   async hasData() {
@@ -20,7 +22,7 @@ class KoreanAddressRepository {
 
   async findGroupByLevel() {
     try {
-      return await KoreanAddress.aggregate([
+      const result = await KoreanAddress.aggregate([
         {
           $sort: { level: 1, name: 1 },
         },
@@ -33,7 +35,19 @@ class KoreanAddressRepository {
           },
         },
       ]);
+
+      if (!result || result.length === 0) {
+        throw new NotFoundError('No address data found');
+      }
+
+      return result;
     } catch (error) {
+      if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
+        throw new DatabaseError('Database connection failed');
+      }
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
       throw new Error(`Failed to retrieve grouped address data: ${error.message}`);
     }
   }

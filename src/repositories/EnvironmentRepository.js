@@ -1,28 +1,22 @@
 const Environment = require('../models/environment');
+const DatabaseError = require('../errors/DatabaseError');
+const NotFoundError = require('../errors/NotFoundError');
 
 class EnvironmentRepository {
   async save(environmentData) {
-    try {
-      const environment = new Environment(environmentData);
-      return await environment.save();
-    } catch (error) {
-      throw new Error(`Failed to save Environment data: ${error.message}`);
-    }
+    const environment = new Environment(environmentData);
+    return await environment.save();
   }
 
   async findAll() {
-    try {
-      return await Environment.find();
-    } catch (error) {
-      throw new Error(`Failed to retrieve environment: ${error.message}`);
-    }
+    return await Environment.find();
   }
 
   async findFilteredContentsWithApiParameters(filterCondition) {
     try {
       const currentTime = new Date();
 
-      return await Environment.aggregate([
+      const result = await Environment.aggregate([
         {
           $match: {
             'dataStatus.isComplete': true,
@@ -128,7 +122,19 @@ class EnvironmentRepository {
           },
         },
       ]);
+
+      if (!result) {
+        throw new NotFoundError('No filtered content data found');
+      }
+
+      return result;
     } catch (error) {
+      if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
+        throw new DatabaseError('Database connection failed');
+      }
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
       throw new Error(`Failed to find filtered contents with api parameters: ${error.message}`);
     }
   }
@@ -151,7 +157,7 @@ class EnvironmentRepository {
     try {
       const currentTime = new Date();
 
-      return await Environment.aggregate([
+      const result = await Environment.aggregate([
         {
           $lookup: {
             from: 'apiparameters',
@@ -326,7 +332,19 @@ class EnvironmentRepository {
           },
         },
       ]);
+
+      if (!result) {
+        throw new NotFoundError('No environment statistics found');
+      }
+
+      return result;
     } catch (error) {
+      if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
+        throw new DatabaseError('Database connection failed');
+      }
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
       throw new Error(`Failed to find environment stats: ${error.message}`);
     }
   }

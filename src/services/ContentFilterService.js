@@ -6,29 +6,21 @@ class ContentFilterService {
   }
 
   async createContentFilter(contentFilterData) {
-    try {
-      return await this.contentFilterRepository.create(contentFilterData);
-    } catch (error) {
-      throw new Error(`Failed to create content filter: ${error.message}`);
-    }
+    return await this.contentFilterRepository.create(contentFilterData);
   }
 
   async updateContentFilter(id, updateData) {
-    try {
-      if (!id) {
-        throw new Error('Content filter ID is required');
-      }
-
-      const updatedContentFilter = await this.contentFilterRepository.updateById(id, updateData);
-
-      if (!updatedContentFilter) {
-        throw new Error('Content filter not found');
-      }
-
-      return updatedContentFilter;
-    } catch (error) {
-      throw new Error(`Failed to update content filter: ${error.message}`);
+    if (!id) {
+      throw new Error('Content filter ID is required');
     }
+
+    const updatedContentFilter = await this.contentFilterRepository.updateById(id, updateData);
+
+    if (!updatedContentFilter) {
+      throw new Error('Content filter not found');
+    }
+
+    return updatedContentFilter;
   }
 }
 
