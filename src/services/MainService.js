@@ -12,84 +12,73 @@ class MainService {
   }
 
   async getMainData() {
-    try {
-      const [banners, categories, regions] = await Promise.all([
-        this.getBanners(),
-        this.getCategoriesWithContents(),
-        this.getRegionsWithStats(),
-      ]);
+    const results = await Promise.allSettled([
+      this.getBanners(),
+      this.getCategoriesWithContents(),
+      this.getRegionsWithStats(),
+    ]);
 
-      return {
-        banners,
-        categories,
-        regions,
-      };
-    } catch (error) {
-      throw new Error(`Failed to get home data: ${error.message}`);
+    const allFailed = results.every((result) => result.status === 'rejected');
+    if (allFailed) {
+      throw new Error('All main data sources failed');
     }
+
+    return {
+      banners: results[0].status === 'fulfilled' ? results[0].value : [],
+      categories: results[1].status === 'fulfilled' ? results[1].value : [],
+      regions: results[2].status === 'fulfilled' ? results[2].value : [],
+    };
   }
 
   async getBanners() {
-    try {
-      const banners = await this.contentFilterRepository.findByType('BANNER', { isActive: true });
+    const banners = await this.contentFilterRepository.findByType('BANNER', { isActive: true });
 
-      return banners.map((banner) => ({
-        id: banner._id.toString(),
-        title: banner.title,
-        description: banner.description,
-        imageUrl: banner.imageUrl,
-        icon: banner.icon,
-      }));
-    } catch (error) {
-      throw new Error(`Failed to get banners: ${error.message}`);
-    }
+    return banners.map((banner) => ({
+      id: banner._id.toString(),
+      title: banner.title,
+      description: banner.description,
+      imageUrl: banner.imageUrl,
+      icon: banner.icon,
+    }));
   }
 
   async getCategoriesWithContents() {
-    try {
-      const categories = await this.contentFilterRepository.findByType('CATEGORY', { isActive: true });
+    const categories = await this.contentFilterRepository.findByType('CATEGORY', { isActive: true });
 
-      const categoriesWithContents = [];
+    const categoriesWithContents = [];
 
-      for (const category of categories) {
-        const contents = await this.getFilteredContents(category.filterCondition);
+    for (const category of categories) {
+      const contents = await this.getFilteredContents(category.filterCondition);
 
-        categoriesWithContents.push({
-          id: category._id.toString(),
-          title: category.title,
-          description: category.description,
-          contents,
-        });
-      }
-
-      return categoriesWithContents;
-    } catch (error) {
-      throw new Error(`Failed to get categories with contents: ${error.message}`);
+      categoriesWithContents.push({
+        id: category._id.toString(),
+        title: category.title,
+        description: category.description,
+        contents,
+      });
     }
+
+    return categoriesWithContents;
   }
 
   async getFilteredContents(filterCondition) {
-    try {
-      if (!filterCondition || this.isEmptyFilterCondition(filterCondition)) {
-        return [];
-      }
-
-      const filteredResults = await this.environmentRepository.findFilteredContentsWithApiParameters(filterCondition);
-
-      return filteredResults.map((item) => ({
-        name: item.apiParameter.name,
-        description: item.apiParameter.description || '',
-        address: item.apiParameter.address,
-        imageUrl: item.apiParameter.imageUrl,
-        metrics: {
-          weather: item.currentSkyStatus || 'unknown',
-          temperature: item.environmentData.weather?.temperature || 0,
-          congestion: item.environmentData.population?.congestionLevel || 'unknown',
-        },
-      }));
-    } catch (error) {
-      throw new Error(`Failed to get filtered contents: ${error.message}`);
+    if (!filterCondition || this.isEmptyFilterCondition(filterCondition)) {
+      return [];
     }
+
+    const filteredResults = await this.environmentRepository.findFilteredContentsWithApiParameters(filterCondition);
+
+    return filteredResults.map((item) => ({
+      name: item.apiParameter.name,
+      description: item.apiParameter.description || '',
+      address: item.apiParameter.address,
+      imageUrl: item.apiParameter.imageUrl,
+      metrics: {
+        weather: item.currentSkyStatus || 'unknown',
+        temperature: item.environmentData.weather?.temperature || 0,
+        congestion: item.environmentData.population?.congestionLevel || 'unknown',
+      },
+    }));
   }
 
   isEmptyFilterCondition(filterCondition) {
@@ -102,33 +91,29 @@ class MainService {
   }
 
   async getRegionsWithStats() {
-    try {
-      const addressGroups = await this.koreanAddressRepository.findGroupByLevel();
-      const sigunguAddresses = addressGroups.find((group) => group._id === 'SIGUNGU')?.addresses;
+    const addressGroups = await this.koreanAddressRepository.findGroupByLevel();
+    const sigunguAddresses = addressGroups.find((group) => group._id === 'SIGUNGU')?.addresses;
 
-      if (!sigunguAddresses?.length) {
-        return [];
-      }
-
-      const districtCodes = sigunguAddresses.map((addr) => addr.id);
-      const stats = await this.environmentRepository.findStatsByAllDistricts(districtCodes);
-      const statsMap = new Map(stats.map((stat) => [stat._id, stat]));
-
-      return sigunguAddresses.map((address) => ({
-        id: address.id,
-        name: address.name,
-        thumbnailUrl: address.thumbnailUrl,
-        metrics: {
-          weather: statsMap.get(address.id)?.currentSkyStatus || 'unknown',
-          temperature: Math.round(statsMap.get(address.id)?.avgTemperature || 0),
-          minTemperature: Math.round(statsMap.get(address.id)?.minTemperature || 0),
-          maxTemperature: Math.round(statsMap.get(address.id)?.maxTemperature || 0),
-          congestion: statsMap.get(address.id)?.mostFrequentCongestion || 'unknown',
-        },
-      }));
-    } catch (error) {
-      throw new Error(`Failed to get regions with stats: ${error.message}`);
+    if (!sigunguAddresses?.length) {
+      return [];
     }
+
+    const districtCodes = sigunguAddresses.map((addr) => addr.id);
+    const stats = await this.environmentRepository.findStatsByAllDistricts(districtCodes);
+    const statsMap = new Map(stats.map((stat) => [stat._id, stat]));
+
+    return sigunguAddresses.map((address) => ({
+      id: address.id,
+      name: address.name,
+      thumbnailUrl: address.thumbnailUrl,
+      metrics: {
+        weather: statsMap.get(address.id)?.currentSkyStatus || 'unknown',
+        temperature: Math.round(statsMap.get(address.id)?.avgTemperature || 0),
+        minTemperature: Math.round(statsMap.get(address.id)?.minTemperature || 0),
+        maxTemperature: Math.round(statsMap.get(address.id)?.maxTemperature || 0),
+        congestion: statsMap.get(address.id)?.mostFrequentCongestion || 'unknown',
+      },
+    }));
   }
 }
 
