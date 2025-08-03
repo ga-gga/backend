@@ -19,21 +19,21 @@ ga-gga-server/
 │   │
 │   ├── constants/
 │   │   ├── apiResponseEnum.js
-│   │   └── environmentEnums.js
+│   │   └── environmentEnum.js
 │   │
-│   ├── controllers/
-│   │   ├── ApiMetadataController.js
-│   │   └── KoreanAddressController.js
-│   │
-│   ├── middleware/
-│   │   └── errorMiddleware.js
+│   ├── errors/
+│   │   ├── DataError.js
+│   │   ├── DatabaseError.js
+│   │   └── NotFoundError.js
 │   │
 │   ├── models/
-│   │   ├── apiMetadata.js
-│   │   ├── apiParameter.js
+│   │   ├── ApiMetadata.js
+│   │   ├── ApiParameter.js
+│   │   ├── KoreanAddress.js
+│   │   ├── contentFilter.js
 │   │   ├── environment.js
-│   │   ├── koreanAddress.js
 │   │   └── sub/
+│   │       ├── filterCondition.js
 │   │       ├── population.js
 │   │       ├── populationForecast.js
 │   │       ├── weather.js
@@ -42,6 +42,7 @@ ga-gga-server/
 │   ├── repositories/
 │   │   ├── ApiMetadataRepository.js
 │   │   ├── ApiParameterRepository.js
+│   │   ├── ContentFilterRepository.js
 │   │   ├── EnvironmentRepository.js
 │   │   └── KoreanAddressRepository.js
 │   │
@@ -57,8 +58,10 @@ ga-gga-server/
 │   ├── services/
 │   │   ├── ApiMetadataService.js
 │   │   ├── ApiParameterService.js
+│   │   ├── ContentFilterService.js
 │   │   ├── EnvironmentService.js
-│   │   └── KoreanAddressService.js
+│   │   ├── KoreanAddressService.js
+│   │   └── MainService.js
 │   │
 │   └── utils/
 │       ├── clients/
@@ -71,10 +74,12 @@ ga-gga-server/
 │       │   ├── ApiParameterLoader.js
 │       │   ├── KoreanAddressLoader.js
 │       │   └── appInitializer.js
-│       └── mappers/
-│           ├── EnvironmentDataMapper.js
-│           ├── PopulationMapper.js
-│           └── WeatherMapper.js
+│       ├── mappers/
+│       │   ├── EnvironmentDataMapper.js
+│       │   ├── PopulationMapper.js
+│       │   └── WeatherMapper.js
+│       └── services/
+│           └── EnvironmentDataGeneratorService.js
 │
 ├── data/
 │   ├── seoul_address_data.json
@@ -88,28 +93,26 @@ ga-gga-server/
 
 ### API
 
-#### Base URL
-
-- local:prod - http://localhost:3000
-
-#### Public APIs
-
-##### Region
+#### Region
 
 - GET - /regions/hierarchy
   - 목적: 행정구역 계층별 그룹 조회
 
-##### Main
+</br>
+
+#### Main
 
 - GET - /main
   - 목적: 메인페이지 데이터 조회
 
-##### API Metadata
+</br>
+
+#### Admin
+
+###### API Metadata
 
 - GET - /api-metadata
   - 목적: API 메타데이터 목록 조회
-
-#### Admin
 
 ##### Environment Data
 
@@ -128,12 +131,7 @@ ga-gga-server/
 - PUT - /admin/content-filters/:id
   - 목적: 콘텐츠 필터 수정
 
-#### Error Handling
-
-- 현재 사용중인 에러 상태 코드
-  - **200**: 성공적인 응답
-  - **404**: 리소스를 찾을 수 없음
-  - **500**: 서버 내부 오류
+</br>
 
 ### Scheduling Information
 
