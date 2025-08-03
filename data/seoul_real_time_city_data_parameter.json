@@ -1,5 +1,6 @@
 {
   "apiName": "seoul_real_time_city_data",
+  "isActive": true,
   "parameters": [
     {
       "code": "POI001",

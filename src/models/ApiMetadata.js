@@ -11,11 +11,6 @@ const apiMetadataSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    updateInterval: {
-      type: Number,
-      required: true,
-      min: 60, // 최소 1분
-    },
     lastSyncAt: {
       type: Date,
       default: null,
