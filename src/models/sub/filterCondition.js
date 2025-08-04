@@ -14,8 +14,8 @@ const filterConditionSchema = new mongoose.Schema(
       default: [],
     },
     temperature: {
-      min: { type: Number },
-      max: { type: Number },
+      min: { type: Number, default: 0 },
+      max: { type: Number, default: 100 },
     },
   },
   {
