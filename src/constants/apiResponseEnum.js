@@ -27,10 +27,12 @@ const SKY = {
 
 const LEVEL = {
   '매우 낮음': 'VERY_LOW',
+  '매우낮음': 'VERY_LOW',
   '낮음': 'LOW',
   '보통': 'NORMAL',
   '높음': 'HIGH',
   '매우 높음': 'VERY_HIGH',
+  '매우높음': 'VERY_HIGH',
   '위험': 'DANGEROUS',
 };
 
