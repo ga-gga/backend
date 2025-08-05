@@ -4,12 +4,13 @@ const NotFoundError = require('../errors/NotFoundError');
 
 class EnvironmentRepository {
   async save(environmentData) {
-    const environment = new Environment(environmentData);
-    return await environment.save();
-  }
-
-  async findAll() {
-    return await Environment.find();
+    try {
+      const environment = new Environment(environmentData);
+      const savedEnvironment = await environment.save();
+      return savedEnvironment;
+    } catch (error) {
+      throw new Error(`Failed to save environment: ${error.message}`);
+    }
   }
 
   async findFilteredContentsWithApiParameters(filterCondition) {

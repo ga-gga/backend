@@ -4,12 +4,30 @@ const NotFoundError = require('../errors/NotFoundError');
 
 class ContentFilterRepository {
   async create(data) {
-    const contentFilter = new ContentFilter(data);
-    return await contentFilter.save();
+    try {
+      const contentFilter = new ContentFilter(data);
+      const savedContentFilter = await contentFilter.save();
+      return savedContentFilter;
+    } catch (error) {
+      throw new Error(`Failed to create content filter: ${error.message}`);
+    }
   }
 
   async updateById(id, updateData) {
-    return await ContentFilter.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+    try {
+      const updatedContentFilter = await ContentFilter.findByIdAndUpdate(id, updateData, {
+        new: true,
+        runValidators: true,
+      });
+
+      if (!updatedContentFilter) {
+        throw new Error('Content filter not found');
+      }
+
+      return updatedContentFilter;
+    } catch (error) {
+      throw new Error(`Failed to update content filter: ${error.message}`);
+    }
   }
 
   async findByType(type, filters = {}) {
