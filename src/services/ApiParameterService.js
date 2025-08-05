@@ -1,5 +1,6 @@
 const ApiParameterRepository = require('../repositories/ApiParameterRepository');
 const ApiMetadataRepository = require('../repositories/ApiMetadataRepository');
+const NotFoundError = require('../errors/NotFoundError');
 
 class ApiParameterService {
   constructor() {
@@ -9,6 +10,10 @@ class ApiParameterService {
 
   async isInitializedByApiName(apiName) {
     const apiMetadata = await this.apiMetadataRepository.findByName(apiName);
+    if (!apiMetadata) {
+      throw new NotFoundError(`API metadata not found for: ${apiName}`);
+    }
+
     const count = await this.apiParameterRepository.countByApiMetadata(apiMetadata._id);
     return count > 0;
   }
@@ -20,7 +25,7 @@ class ApiParameterService {
 
     const apiMetadata = await this.apiMetadataRepository.findByName(apiName);
     if (!apiMetadata) {
-      throw new Error(`API metadata not found for: ${apiName}`);
+      throw new NotFoundError(`API metadata not found for: ${apiName}`);
     }
 
     const transformedData = await this.transformParameterData(parameters, apiMetadata._id);
@@ -77,7 +82,13 @@ class ApiParameterService {
   }
 
   async getApiParametersByMetadataId(apiMetadataId) {
-    return await this.apiParameterRepository.findByApiMetadata(apiMetadataId);
+    const result = await this.apiParameterRepository.findByApiMetadata(apiMetadataId);
+
+    if (!result || result.length === 0) {
+      throw new NotFoundError(`No API parameters found for metadata ID: ${apiMetadataId}`);
+    }
+
+    return result;
   }
 }
 

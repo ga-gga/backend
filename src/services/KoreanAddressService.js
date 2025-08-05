@@ -1,4 +1,5 @@
 const KoreanAddressRepository = require('../repositories/KoreanAddressRepository');
+const NotFoundError = require('../errors/NotFoundError');
 
 class KoreanAddressService {
   constructor() {
@@ -39,6 +40,10 @@ class KoreanAddressService {
 
   async getGroupedAddresses() {
     const groupedData = await this.koreanAddressRepository.findGroupByLevel();
+
+    if (!groupedData || groupedData.length === 0) {
+      throw new NotFoundError('No address data found');
+    }
 
     const result = {
       SIDO: [],

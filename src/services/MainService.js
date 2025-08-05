@@ -1,13 +1,16 @@
 const ContentFilterRepository = require('../repositories/ContentFilterRepository');
 const ApiParameterRepository = require('../repositories/ApiParameterRepository');
 const EnvironmentRepository = require('../repositories/EnvironmentRepository');
+const EnvironmentAggregationRepository = require('../repositories/EnvironmentAggregationRepository');
 const KoreanAddressRepository = require('../repositories/KoreanAddressRepository');
+const NotFoundError = require('../errors/NotFoundError');
 
 class MainService {
   constructor() {
     this.contentFilterRepository = new ContentFilterRepository();
     this.apiParameterRepository = new ApiParameterRepository();
     this.environmentRepository = new EnvironmentRepository();
+    this.environmentAggregationRepository = new EnvironmentAggregationRepository();
     this.koreanAddressRepository = new KoreanAddressRepository();
   }
 
@@ -33,6 +36,10 @@ class MainService {
   async getBanners() {
     const banners = await this.contentFilterRepository.findByType('BANNER', { isActive: true });
 
+    if (!banners || banners.length === 0) {
+      throw new NotFoundError('No active banners found');
+    }
+
     return banners.map((banner) => ({
       id: banner._id.toString(),
       title: banner.title,
@@ -44,6 +51,10 @@ class MainService {
 
   async getCategoriesWithContents() {
     const categories = await this.contentFilterRepository.findByType('CATEGORY', { isActive: true });
+
+    if (!categories || categories.length === 0) {
+      throw new NotFoundError('No active categories found');
+    }
 
     const categoriesWithContents = [];
 
@@ -66,7 +77,8 @@ class MainService {
       return [];
     }
 
-    const filteredResults = await this.environmentRepository.findFilteredContentsWithApiParameters(filterCondition);
+    const filteredResults =
+      await this.environmentAggregationRepository.findFilteredContentsWithApiParameters(filterCondition);
 
     return filteredResults.map((item) => ({
       name: item.apiParameter.name,
@@ -92,6 +104,11 @@ class MainService {
 
   async getRegionsWithStats() {
     const addressGroups = await this.koreanAddressRepository.findGroupByLevel();
+
+    if (!addressGroups || addressGroups.length === 0) {
+      throw new NotFoundError('No address data found');
+    }
+
     const sigunguAddresses = addressGroups.find((group) => group._id === 'SIGUNGU')?.addresses;
 
     if (!sigunguAddresses?.length) {
@@ -99,7 +116,7 @@ class MainService {
     }
 
     const districtCodes = sigunguAddresses.map((addr) => addr.id);
-    const stats = await this.environmentRepository.findStatsByAllDistricts(districtCodes);
+    const stats = await this.environmentAggregationRepository.findStatsByAllDistricts(districtCodes);
     const statsMap = new Map(stats.map((stat) => [stat._id, stat]));
 
     return sigunguAddresses.map((address) => ({

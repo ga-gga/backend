@@ -1,4 +1,5 @@
 const ContentFilterRepository = require('../repositories/ContentFilterRepository');
+const NotFoundError = require('../errors/NotFoundError');
 
 class ContentFilterService {
   constructor() {
@@ -17,10 +18,20 @@ class ContentFilterService {
     const updatedContentFilter = await this.contentFilterRepository.updateById(id, updateData);
 
     if (!updatedContentFilter) {
-      throw new Error('Content filter not found');
+      throw new NotFoundError('Content filter not found');
     }
 
     return updatedContentFilter;
+  }
+
+  async getContentFiltersByType(type, filters = {}) {
+    const result = await this.contentFilterRepository.findByType(type, filters);
+
+    if (!result || result.length === 0) {
+      throw new NotFoundError(`No ${type} content filters found`);
+    }
+
+    return result;
   }
 }
 

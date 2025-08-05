@@ -1,4 +1,5 @@
 const ApiMetadataRepository = require('../repositories/ApiMetadataRepository');
+const NotFoundError = require('../errors/NotFoundError');
 
 class ApiMetadataService {
   constructor() {
@@ -26,11 +27,23 @@ class ApiMetadataService {
   }
 
   async getAllApiMetadata() {
-    return await this.apiMetadataRepository.findAll();
+    const result = await this.apiMetadataRepository.findAll();
+
+    if (!result || result.length === 0) {
+      throw new NotFoundError('No API metadata found');
+    }
+
+    return result;
   }
 
   async getApiMetadataByName(name, { isActive } = {}) {
-    return await this.apiMetadataRepository.findByName(name, { isActive });
+    const result = await this.apiMetadataRepository.findByName(name, { isActive });
+
+    if (!result) {
+      throw new NotFoundError(`API metadata not found for name: ${name}`);
+    }
+
+    return result;
   }
 }
 
