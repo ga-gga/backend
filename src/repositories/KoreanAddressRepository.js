@@ -1,6 +1,5 @@
 const KoreanAddress = require('../models/koreanAddress');
 const DatabaseError = require('../errors/DatabaseError');
-const NotFoundError = require('../errors/NotFoundError');
 
 class KoreanAddressRepository {
   async hasData() {
@@ -8,6 +7,9 @@ class KoreanAddressRepository {
       const count = await KoreanAddress.estimatedDocumentCount();
       return count > 0;
     } catch (error) {
+      if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
+        throw new DatabaseError('Database connection failed');
+      }
       throw new Error(`Failed to check data existence: ${error.message}`);
     }
   }
@@ -16,6 +18,9 @@ class KoreanAddressRepository {
     try {
       return await KoreanAddress.insertMany(addressDataArray, { ordered: false });
     } catch (error) {
+      if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
+        throw new DatabaseError('Database connection failed');
+      }
       throw new Error(`Failed to save multiple address data: ${error.message}`);
     }
   }
@@ -36,17 +41,10 @@ class KoreanAddressRepository {
         },
       ]);
 
-      if (!result || result.length === 0) {
-        throw new NotFoundError('No address data found');
-      }
-
-      return result;
+      return result || [];
     } catch (error) {
       if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
         throw new DatabaseError('Database connection failed');
-      }
-      if (error instanceof NotFoundError) {
-        throw error;
       }
       throw new Error(`Failed to retrieve grouped address data: ${error.message}`);
     }
