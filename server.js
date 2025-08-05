@@ -7,7 +7,7 @@ const start = async () => {
   try {
     const app = await startApplication();
     app.listen(PORT, () => {
-      console.log(`Server port ${PORT}`);
+      console.log(`[SERVER] Server port ${PORT}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error.message);

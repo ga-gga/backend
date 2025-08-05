@@ -1,4 +1,5 @@
 const EnvironmentRepository = require('../repositories/EnvironmentRepository');
+const NotFoundError = require('../errors/NotFoundError');
 
 class EnvironmentService {
   constructor() {
@@ -8,7 +9,9 @@ class EnvironmentService {
   async saveEnvironmentData(apiParameterId, transformedData) {
     try {
       if (!transformedData) {
-        throw new Error('No data to save');
+        const notFoundError = new NotFoundError('No environment data available');
+        const errorAttribute = this.createErrorAttribute(apiParameterId, notFoundError);
+        return await this.environmentRepository.save(errorAttribute);
       }
 
       return await this.environmentRepository.save(transformedData);

@@ -8,32 +8,32 @@ ga-gga-server/
 ├── package.json
 ├── package-lock.json
 ├── eslint.config.js
-├── server.js                    # 애플리케이션 엔트리 포인트
+├── server.js
 ├── LICENSE
 │
 ├── src/
-│   ├── app.js                  # Express 앱 설정 및 라우팅
+│   ├── app.js
 │   │
 │   ├── config/
 │   │   └── database.js
 │   │
-│   ├── constants/              # 상수 정의
+│   ├── constants/
 │   │   ├── apiResponseEnum.js
-│   │   └── environmentEnums.js
+│   │   └── environmentEnum.js
 │   │
-│   ├── controllers/
-│   │   ├── ApiMetadataController.js
-│   │   └── KoreanAddressController.js
+│   ├── errors/
+│   │   ├── DataError.js
+│   │   ├── DatabaseError.js
+│   │   └── NotFoundError.js
 │   │
-│   ├── middleware/
-│   │   └── errorMiddleware.js
-│   │
-│   ├── models/                 # Mongoose 스키마 정의
-│   │   ├── apiMetadata.js
-│   │   ├── apiParameter.js
+│   ├── models/
+│   │   ├── ApiMetadata.js
+│   │   ├── ApiParameter.js
+│   │   ├── KoreanAddress.js
+│   │   ├── contentFilter.js
 │   │   ├── environment.js
-│   │   ├── koreanAddress.js
-│   │   └── sub/                # 세부 모델
+│   │   └── sub/
+│   │       ├── filterCondition.js
 │   │       ├── population.js
 │   │       ├── populationForecast.js
 │   │       ├── weather.js
@@ -42,41 +42,48 @@ ga-gga-server/
 │   ├── repositories/
 │   │   ├── ApiMetadataRepository.js
 │   │   ├── ApiParameterRepository.js
+│   │   ├── ContentFilterRepository.js
 │   │   ├── EnvironmentRepository.js
 │   │   └── KoreanAddressRepository.js
 │   │
 │   ├── routes/
+│   │   ├── adminRoutes.js
 │   │   ├── apiMetadataRoutes.js
-│   │   └── koreanAddressRoutes.js
+│   │   ├── koreanAddressRoutes.js
+│   │   └── mainRoutes.js
 │   │
-│   ├── scheduler/              # 스케줄링 관련
+│   ├── scheduler/
 │   │   └── DataScheduler.js
 │   │
 │   ├── services/
 │   │   ├── ApiMetadataService.js
 │   │   ├── ApiParameterService.js
+│   │   ├── ContentFilterService.js
 │   │   ├── EnvironmentService.js
-│   │   └── KoreanAddressService.js
+│   │   ├── KoreanAddressService.js
+│   │   └── MainService.js
 │   │
 │   └── utils/
-│       ├── clients/            # 외부 API 클라이언트
+│       ├── clients/
 │       │   └── EnvironmentDataClient.js
-│       ├── helpers/            # 유틸리티 함수
+│       ├── helpers/
 │       │   ├── enumMapper.js
 │       │   ├── parsers.js
 │       │   └── validators.js
-│       ├── loaders/            # 데이터 로더
+│       ├── loaders/
 │       │   ├── ApiParameterLoader.js
 │       │   ├── KoreanAddressLoader.js
 │       │   └── appInitializer.js
-│       └── mappers/            # 데이터 매핑
-│           ├── EnvironmentDataMapper.js
-│           ├── PopulationMapper.js
-│           └── WeatherMapper.js
+│       ├── mappers/
+│       │   ├── EnvironmentDataMapper.js
+│       │   ├── PopulationMapper.js
+│       │   └── WeatherMapper.js
+│       └── services/
+│           └── EnvironmentDataGeneratorService.js
 │
 ├── data/
-│   ├── seoul_address_data.json                # 서울 주소 정적 데이터
-│   └── seoul_real_time_city_data_parameter.json  # API 파라미터 설정
+│   ├── seoul_address_data.json
+│   └── seoul_real_time_city_data_parameter.json
 │
 └── test/
 
@@ -86,43 +93,45 @@ ga-gga-server/
 
 ### API
 
-#### Base URL
-
-- local:prod - http://localhost:3000
-
-#### Utility
-
-- GET - /
-  - 응답: API 정보 및 사용 가능한 엔드포인트 목록
-- GET - /regions/check
-  - 응답: {"initialized": true/false}
-
 #### Region
 
-- GET - /regions/levels
-  - 목적: 행정구역 레벨별 그룹 조회
-  - 응답 구조
-    ```
-    {
-      "SIDO": [...],
-      "SIGUNGU": [...],
-      "EUPMYEONDONG": [...],
-      "RI": [...]
-    }
-    ```
+- GET - /regions/hierarchy
+  - 목적: 행정구역 계층별 그룹 조회
 
-#### Error Handling
+</br>
 
-- GET - `/non-existent`
+#### Main
 
-  - **목적**: 존재하지 않는 엔드포인트 테스트
-  - **응답**: `404 Not Found`
-  - **에러 메시지**: `{"error": "Endpoint not found"}`
+- GET - /main
+  - 목적: 메인페이지 데이터 조회
 
-- 현재 사용중인 에러 상태 코드
-  - **200**: 성공적인 응답
-  - **404**: 리소스를 찾을 수 없음
-  - **500**: 서버 내부 오류
+</br>
+
+#### Admin
+
+###### API Metadata
+
+- GET - /api-metadata
+  - 목적: API 메타데이터 목록 조회
+
+##### Environment Data
+
+- POST - /admin/environment-data
+  - 목적: 환경 데이터 생성
+
+##### API Metadata Management
+
+- POST - /admin/api-metadata
+  - 목적: API 메타데이터 생성
+
+##### Content Filter Management
+
+- POST - /admin/content-filters
+  - 목적: 콘텐츠 필터 생성
+- PUT - /admin/content-filters/:id
+  - 목적: 콘텐츠 필터 수정
+
+</br>
 
 ### Scheduling Information
 

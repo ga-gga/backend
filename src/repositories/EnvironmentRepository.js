@@ -1,20 +1,17 @@
 const Environment = require('../models/environment');
+const DatabaseError = require('../errors/DatabaseError');
 
 class EnvironmentRepository {
   async save(environmentData) {
     try {
       const environment = new Environment(environmentData);
-      return await environment.save();
+      const savedEnvironment = await environment.save();
+      return savedEnvironment;
     } catch (error) {
-      throw new Error(`Failed to save Environment data: ${error.message}`);
-    }
-  }
-
-  async findAll() {
-    try {
-      return await Environment.findAll();
-    } catch (error) {
-      throw new Error(`Failed to retrieve environment: ${error.message}`);
+      if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
+        throw new DatabaseError('Database connection failed');
+      }
+      throw new Error(`Failed to save environment: ${error.message}`);
     }
   }
 }

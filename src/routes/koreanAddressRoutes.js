@@ -1,15 +1,25 @@
 const express = require('express');
-const KoreanAddressController = require('../controllers/KoreanAddressController');
+const KoreanAddressService = require('../services/KoreanAddressService');
 
 const router = express.Router();
-const koreanAddressController = new KoreanAddressController();
+const koreanAddressService = new KoreanAddressService();
 
-router.get('/levels', (req, res, next) => {
-  koreanAddressController.getGroupedAddresses(req, res, next);
+router.get('/hierarchy', async (req, res, next) => {
+  try {
+    const groupedAddresses = await koreanAddressService.getGroupedAddresses();
+    res.json(groupedAddresses);
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.get('/check', (req, res, next) => {
-  koreanAddressController.checkInitialization(req, res, next);
+router.get('/check', async (req, res, next) => {
+  try {
+    const isInitialized = await koreanAddressService.isInitialized();
+    res.json({ initialized: isInitialized });
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

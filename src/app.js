@@ -1,7 +1,8 @@
 const express = require('express');
-const errorMiddleware = require('./middleware/errorMiddleware');
 const koreanAddressRoutes = require('./routes/koreanAddressRoutes');
 const apiMetadataRoutes = require('./routes/apiMetadataRoutes');
+const mainRoutes = require('./routes/mainRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const { initializeDatabase, initializeStaticData, initializeScheduler } = require('./utils/loaders/appInitializer');
 
 const createApp = () => {
@@ -9,27 +10,29 @@ const createApp = () => {
 
   app.use(express.json());
 
-  app.get('/', (req, res) => {
-    res.json({
-      message: 'ga-gga Server API',
-      version: '1.0.0',
-      endpoints: {
-        CheckAddressData: '/regions/exists',
-        FullAddressByAdministrativeDistrict: '/regions',
-      },
-    });
-  });
-
   app.use('/regions', koreanAddressRoutes);
   app.use('/api-metadata', apiMetadataRoutes);
+  app.use('/main', mainRoutes);
+  app.use('/admin', adminRoutes);
 
   app.use((req, res, next) => {
     const error = new Error('Endpoint not found');
-    error.status = 404;
-    res.status(error.status).json({ error: error.message });
+    error.statusCode = 404;
+    next(error);
   });
 
-  app.use(errorMiddleware);
+  app.use((err, req, res, next) => {
+    console.error('Error:', err.message);
+
+    const statusCode = err.statusCode || 500;
+    const message = err.statusCode ? err.message : 'Internal server error';
+
+    res.status(statusCode).json({
+      success: false,
+      error: message,
+      timestamp: new Date().toISOString(),
+    });
+  });
 
   return app;
 };

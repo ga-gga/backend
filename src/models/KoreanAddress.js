@@ -26,6 +26,10 @@ const koreanAddressSchema = new mongoose.Schema(
         },
       },
     },
+    thumbnailUrl: {
+      type: String,
+      default: 'https://..',
+    },
   },
   {
     timestamps: true,
@@ -33,6 +37,6 @@ const koreanAddressSchema = new mongoose.Schema(
   },
 );
 
-koreanAddressSchema.index({ level: 1, name: 1 }, { name: 'level_name_index' });
+koreanAddressSchema.index({ level: 1, name: 1 });
 
 module.exports = mongoose.model('KoreanAddress', koreanAddressSchema);

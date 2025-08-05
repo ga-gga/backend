@@ -28,13 +28,7 @@ class EnvironmentDataClient {
 
     client.interceptors.response.use(
       (response) => response,
-      (error) => {
-        console.error(`API Call Failed:`, {
-          status: error.response?.status,
-          message: error.message,
-        });
-        return Promise.reject(error);
-      },
+      (error) => Promise.reject(error),
     );
 
     return client;
@@ -99,7 +93,6 @@ class EnvironmentDataClient {
         timestamp: new Date().toISOString(),
       };
     } catch (error) {
-      console.error(`Failed to fetch data for parameter ${parameter.externalCode}:`, error.message);
       return this.createFailedResponse(parameter, error);
     }
   }
@@ -136,6 +129,7 @@ class EnvironmentDataClient {
         parameterId,
         parameterCode,
         hasData: !!transformedData,
+        dataStatus: transformedData?.dataStatus,
         result,
       };
     } catch (error) {
@@ -157,18 +151,37 @@ class EnvironmentDataClient {
       if (r.success) {
         apiSuccessful++;
       } else {
-        apiFailures.push(`Call Api: ${r.error}`);
+        const poiCode = r.parameter?.externalCode || 'UNKNOWN';
+        apiFailures.push(`Call Api [${poiCode}]: ${r.error}`);
       }
     });
 
     const processingFailures = [];
+    const dataQualityIssues = [];
     let processingSuccessful = 0;
+    let completeDataCount = 0;
 
     processingResults.forEach((r) => {
       if (r.status === 'fulfilled' && r.value?.success) {
         processingSuccessful++;
+        const dataStatus = r.value.dataStatus;
+
+        if (dataStatus?.isComplete) {
+          completeDataCount++;
+        } else if (dataStatus?.missingFields?.length > 0) {
+          const poiCode = r.value.parameterCode || 'UNKNOWN';
+          dataQualityIssues.push(`Incomplete data [${poiCode}]: missing ${dataStatus.missingFields.join(', ')}`);
+        }
+
+        if (dataStatus?.errors?.length > 0) {
+          const poiCode = r.value.parameterCode || 'UNKNOWN';
+          dataStatus.errors.forEach((error) => {
+            dataQualityIssues.push(`Data error [${poiCode}] ${error.field}: ${error.message}`);
+          });
+        }
       } else {
-        processingFailures.push(`Processing: ${r.value?.error || r.reason?.message || 'Unknown'}`);
+        const poiCode = r.value?.parameterCode || 'UNKNOWN';
+        processingFailures.push(`Processing [${poiCode}]: ${r.value?.error || r.reason?.message || 'Unknown'}`);
       }
     });
 
@@ -177,12 +190,17 @@ class EnvironmentDataClient {
       stats: {
         api: { total: apiResponses.length, successful: apiSuccessful },
         processing: { total: processingResults.length, successful: processingSuccessful },
+        dataQuality: {
+          total: processingSuccessful,
+          complete: completeDataCount,
+          incomplete: processingSuccessful - completeDataCount,
+        },
       },
     };
 
-    const allFailures = [...apiFailures, ...processingFailures];
-    if (allFailures.length > 0) {
-      summary.failures = allFailures;
+    const allIssues = [...apiFailures, ...processingFailures, ...dataQualityIssues];
+    if (allIssues.length > 0) {
+      summary.issues = allIssues;
     }
 
     return summary;

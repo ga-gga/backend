@@ -1,15 +1,16 @@
 const express = require('express');
-const ApiMetadataController = require('../controllers/ApiMetadataController');
+const ApiMetadataService = require('../services/ApiMetadataService');
 
 const router = express.Router();
-const apiMetadataController = new ApiMetadataController();
+const apiMetadataService = new ApiMetadataService();
 
-router.post('/', (req, res, next) => {
-  apiMetadataController.createApiMetadata(req, res, next);
-});
-
-router.get('/', (req, res, next) => {
-  apiMetadataController.getAllApiMetadata(req, res, next);
+router.get('/', async (req, res, next) => {
+  try {
+    const apiMetadataList = await apiMetadataService.getAllApiMetadata();
+    res.json(apiMetadataList);
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

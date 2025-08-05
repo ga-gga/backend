@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { PRECIPITATION_TYPES } = require('../../constants/environmentEnums');
+const { PRECIPITATION_TYPES } = require('../../constants/environmentEnum');
 
 const weatherSchema = new mongoose.Schema(
   {

@@ -1,41 +1,286 @@
 {
   "apiName": "seoul_real_time_city_data",
+  "isActive": true,
   "parameters": [
     {
       "code": "POI001",
       "name": "강남 MICE 관광특구",
       "koreanAddressCode": "1168010500",
-      "address": "서울특별시 삼성동 159"
+      "address": "서울특별시 삼성동 159",
+      "imageUrl": "https://images.unsplash.com/photo-1550202703-d2fcbee60606?q=80&w=1482&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "description": "국제회의와 전시의 중심지"
     },
     {
       "code": "POI002",
       "name": "동대문 관광특구",
       "koreanAddressCode": ["1114014800", "1114014900", "1114016200"],
-      "address": "서울특별시 을지로7가 143"
+      "address": "서울특별시 을지로7가 143",
+      "imageUrl": "https://images.unsplash.com/photo-1625849328373-996bd407b702?q=80&w=830&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "description": "패션과 쇼핑의 메카"
+    },
+    {
+      "code": "POI003",
+      "name": "명동 관광특구",
+      "koreanAddressCode": [
+        "1114010400",
+        "1114010500",
+        "1114010200",
+        "1114010300",
+        "1114010600",
+        "1114011500",
+        "1114010700",
+        "1114010800",
+        "1114010900",
+        "1114012600",
+        "1114012700",
+        "1114011100",
+        "1114012400",
+        "1114012500",
+        "1114011200"
+      ],
+      "address": "서울특별시 중구 명동 관광특구",
+      "imageUrl": "https://cdn.pixabay.com/photo/2014/04/17/05/15/myeongdong-326135_1280.jpg",
+      "description": "외국인이 가장 사랑하는 거리"
+    },
+    {
+      "code": "POI004",
+      "name": "이태원 관광특구",
+      "koreanAddressCode": ["1117013000", "1117013200"],
+      "address": "서울특별시 용산구 이태원 관광특구",
+      "imageUrl": "https://images.unsplash.com/photo-1605656761288-05f68742b776?q=80&w=770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "description": "세계 각국의 문화가 만나는 곳"
+    },
+    {
+      "code": "POI005",
+      "name": "잠실 관광특구",
+      "koreanAddressCode": ["1171011100", "1171010200", "1171010100"],
+      "address": "서울특별시 송파구 잠실 관광특구",
+      "imageUrl": "https://cdn.pixabay.com/photo/2018/07/05/15/31/night-view-3518554_1280.jpg",
+      "description": "스포츠와 엔터테인먼트의 중심"
+    },
+    {
+      "code": "POI006",
+      "name": "종로 청계 관광특구",
+      "koreanAddressCode": ["1111012600", "1111013800", "1111015600", "1111016100", "1111016300"],
+      "address": "서울특별시 종로구 종로 청계 관광특구",
+      "imageUrl": "https://cdn.pixabay.com/photo/2018/11/09/11/00/seoul-3804293_1280.jpg",
+      "description": "전통과 현대가 공존하는 거리"
+    },
+    {
+      "code": "POI007",
+      "name": "홍대 관광특구",
+      "koreanAddressCode": ["1144012000", "1144012100"],
+      "address": "서울특별시 마포구 홍대 관광특구",
+      "imageUrl": "https://images.unsplash.com/photo-1574442274210-ba4925b7ae61?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "description": "젊음과 예술이 살아있는 거리"
     },
     {
       "code": "POI008",
       "name": "경복궁",
       "koreanAddressCode": "1111011900",
-      "address": "서울특별시 세종로 1-1"
+      "address": "서울특별시 세종로 1-1",
+      "imageUrl": "https://images.unsplash.com/photo-1638964663550-e2123ac8900b?q=80&w=1475&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "description": "조선 왕조의 웅장한 정궁"
+    },
+    {
+      "code": "POI009",
+      "name": "광화문 덕수궁",
+      "koreanAddressCode": ["1111011900", "1111011600", "1111012200", "1111012400"],
+      "address": "서울특별시 종로구 광화문, 덕수궁",
+      "imageUrl": "https://images.unsplash.com/photo-1656853649843-a8ce5655108a?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "description": "대한민국의 중심, 역사의 현장"
+    },
+    {
+      "code": "POI010",
+      "name": "보신각",
+      "koreanAddressCode": ["1111012600", "1111013800", "1111012700", "1111013500", "1111012300"],
+      "address": "서울특별시 종로구 종각역",
+      "imageUrl": "https://i.namu.wiki/i/8Qkoi0GqiXz9Q0yRaIrE0J_P9jPS9kKg9QOgTqPtLUVD0G9FgfU3VGK8UqxtG1zbL2fI8HdVYyrygoxYd28i39iXfRd3mzExmorJfbhaCYwCoJFrUgGMDdQYhvzIxh6khN00KxcY5APFymUACGQSIg.webp",
+      "description": "새해를 알리는 종소리의 진원지"
+    },
+    {
+      "code": "POI011",
+      "name": "서울 암사동 유적",
+      "koreanAddressCode": "1174010700",
+      "address": "서울특별시 강동구 암사동 139-2",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos/05B03101Ca6000.jpg",
+      "description": "신석기 시대를 만나는 곳"
+    },
+    {
+      "code": "POI012",
+      "name": "창덕궁 종묘",
+      "koreanAddressCode": ["1111013000", "1111015000"],
+      "address": "서울특별시 종로구 창덕궁, 종묘",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos/01W03904Ca0000.jpg",
+      "description": "유네스코 세계문화유산"
+    },
+    {
+      "code": "POI013",
+      "name": "가산디지털단지역",
+      "koreanAddressCode": "1154510100",
+      "address": "서울특별시 금천구 가산동 468-4",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos6/06H00204Db80000.jpg",
+      "description": "IT 산업의 허브"
     },
     {
       "code": "POI014",
       "name": "강남역",
       "koreanAddressCode": ["1168010100", "1165010800"],
-      "address": "서울특별시 역삼동 858"
+      "address": "서울특별시 역삼동 858",
+      "imageUrl": "https://images.unsplash.com/photo-1564979263396-6623249e75ea?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "description": "대한민국 비즈니스의 심장"
+    },
+    {
+      "code": "POI015",
+      "name": "건대입구역",
+      "koreanAddressCode": ["1121510700", "1121510500"],
+      "address": "서울특별시 광진구 화양동 7-3",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos6/06F00508Dc10000.jpg",
+      "description": "젊은 에너지가 넘치는 대학가"
+    },
+    {
+      "code": "POI016",
+      "name": "고덕역",
+      "koreanAddressCode": "1174010100",
+      "address": "서울특별시 강동구 고덕동 310",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos/01B00404Dc2000.jpg",
+      "description": "신도시의 새로운 중심지"
+    },
+    {
+      "code": "POI017",
+      "name": "고속터미널역",
+      "koreanAddressCode": "1165010700",
+      "address": "서울특별시 서초구 반포동 19-4",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos/04O02407db5000.jpg",
+      "description": "전국을 연결하는 교통 요충지"
+    },
+    {
+      "code": "POI018",
+      "name": "교대역",
+      "koreanAddressCode": "1165010800",
+      "address": "서울특별시 서초구 서초동 1748-4",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos/05O01303Dc8000.jpg",
+      "description": "교육과 법조의 중심지"
+    },
+    {
+      "code": "POI019",
+      "name": "구로디지털단지역",
+      "koreanAddressCode": "1153010200",
+      "address": "서울특별시 구로구 구로동 810-3",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos/05G02004Bb4000.jpg",
+      "description": "디지털 혁신의 메카"
+    },
+    {
+      "code": "POI020",
+      "name": "구로역",
+      "koreanAddressCode": "1153010200",
+      "address": "서울특별시 구로구 구로동 585-3",
+      "imageUrl": "https://i.namu.wiki/i/P_mapNZithfO-tuRpvXVWo3zUh9uIGlPf5nfgtjXUL2xwNSMb41lBm48XhpZRqwhVQcUe1jrfM_aGQkn6sXqLH9LFx6q4f6P9dVH_FAKW7tJk1C-U7665uwNo5oScOlVuqR_hJ_BBI673RBFQTeyIw.webp",
+      "description": "서남권 교통의 관문"
+    },
+    {
+      "code": "POI021",
+      "name": "군자역",
+      "koreanAddressCode": ["1121510200", "1121510900", "1121510100"],
+      "address": "서울틀별시 광진구 능동 275-5",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos/04F02802db7000.jpg",
+      "description": "어린이대공원과 함께하는 곳"
+    },
+    {
+      "code": "POI023",
+      "name": "대림역",
+      "koreanAddressCode": ["1153010200", "1156013300"],
+      "address": "서울특별시 구로구 구로동 1204",
+      "imageUrl": "https://guro.grandculture.net/Image?localName=guro&id=GC030P2439&t=middle",
+      "description": "다문화가 공존하는 거리"
+    },
+    {
+      "code": "POI024",
+      "name": "동대문역",
+      "koreanAddressCode": ["1111017400", "1111016400"],
+      "address": "서울특별시 종로구 창신동 497-1",
+      "imageUrl": "https://cdn.pixabay.com/photo/2022/10/15/16/44/night-view-7523476_1280.jpg",
+      "description": "역사와 패션이 만나는 곳"
+    },
+    {
+      "code": "POI025",
+      "name": "뚝섬역",
+      "koreanAddressCode": "1120011400",
+      "address": "서울특별시 성동구 성수동1가 656-745",
+      "imageUrl": "https://www.google.com/imgres?q=%EB%9A%9D%EC%84%AC%EC%97%AD%20%EA%B7%BC%EC%B2%98%20%EC%9D%B4%EB%AF%B8%EC%A7%80&imgurl=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2Fn1ekv%2FbtsM0HNMVHy%2FAAAAAAAAAAAAAAAAAAAAAG1izFcWmC3QdgCA7fxHh_G0A-HUeZQ5W6oTAMsYmfgG%2Fimg.jpg%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1753973999%26allow_ip%3D%26allow_referer%3D%26signature%3Dkh2x7tE0Lv5rFrYOj3LpO%252FYZn7M%253D&imgrefurl=https%3A%2F%2Fpinkcloudy.tistory.com%2Fv%2F4039&docid=_hAz43jtOeuN9M&tbnid=lKFy3OcxI18jEM&vet=12ahUKEwjnv62vmuSOAxVV1DQHHY9ANsMQM3oECDQQAA..i&w=1400&h=788&hcb=2&ved=2ahUKEwjnv62vmuSOAxVV1DQHHY9ANsMQM3oECDQQAA",
+      "description": "한강과 도시의 만남"
+    },
+    {
+      "code": "POI026",
+      "name": "미아사거리역",
+      "koreanAddressCode": ["1130510100", "1129013400"],
+      "address": "서울특별시 강북구 미아동 66-1",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos/05C01303Db4000.jpg",
+      "description": "북부 서울의 교통 중심지"
+    },
+    {
+      "code": "POI027",
+      "name": "발산역",
+      "koreanAddressCode": ["1150010500", "1150010600", "1150010200"],
+      "address": "서울특별시 강서구 마곡동 727-1496",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos6/06D02607Dc80000.jpg",
+      "description": "신개발지역의 새로운 중심"
+    },
+    {
+      "code": "POI029",
+      "name": "사당역",
+      "koreanAddressCode": ["1159010700", "1165010100", "1162010300"],
+      "address": "서울특별시 동작구 사당동 1129",
+      "imageUrl": "https://cdn.redaily.co.kr/news/photo/202109/img_2242_1.jpg",
+      "description": "강남북을 잇는 교통 요지"
+    },
+    {
+      "code": "POI030",
+      "name": "삼각지역",
+      "koreanAddressCode": "1117012400",
+      "address": "서울특별시 용산구 한강로1가 237-4",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c7/428_Samgakji_Station_Sign.JPG",
+      "description": "용산의 중심, 교통의 요충지"
+    },
+    {
+      "code": "POI031",
+      "name": "서울대입구역",
+      "koreanAddressCode": "1162010100",
+      "address": "서울특별시 관악구 봉천동 979-2",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQN4G6Qe_FHUqnL1GPZb-v0CmTD5V0V9R-Syg&s",
+      "description": "최고 학부의 관문"
+    },
+    {
+      "code": "POI032",
+      "name": "서울식물원 마곡나루역",
+      "koreanAddressCode": "1150010500",
+      "address": "서울특별시 강서구 서울식물원, 마곡나루역",
+      "imageUrl": "https://i.namu.wiki/i/LYScfLyNbr74qLPj-ylfhJpur54Pvirlm5_1S8G7BF1SVhpq2_ILcDjedur5TxJyfENgjjIwji8U1FwbrppLbA.webp",
+      "description": "자연과 도시가 만나는 곳"
+    },
+    {
+      "code": "POI033",
+      "name": "서울역",
+      "koreanAddressCode": "1117010700",
+      "address": "서울특별시 용산구 동자동 43-205",
+      "imageUrl": "https://i.namu.wiki/i/Med4Y5JV_FYjaX4ZaJlM-4n7IThVM0CeiJpec5uQBiLHP5i22o59nKZ-UzIYcisJ6bi1Qg3qlRYQhoc8cW0GoA.webp",
+      "description": "대한민국 철도의 중심역"
     },
     {
       "code": "POI074",
       "name": "영등포 타임스퀘어",
       "koreanAddressCode": ["1156010500", "1156010400"],
-      "address": "서울특별시 영등포동4가 442"
+      "address": "서울특별시 영등포동4가 442",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos6/06T04301Db12000.jpg",
+      "description": "서남권 최대 쇼핑몰"
     },
     {
       "code": "POI085",
       "name": "강서한강공원",
       "koreanAddressCode": "1150010900",
-      "address": "서울특별시 강서구 방화동 2-32"
+      "address": "서울특별시 강서구 방화동 2-32",
+      "imageUrl": "https://data.si.re.kr/sites/default/files/photos/05D00401Ba2000.jpg",
+      "description": "한강의 아름다운 쉼터"
     }
   ]
 }
