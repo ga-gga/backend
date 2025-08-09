@@ -27,28 +27,25 @@ jobs:
 
       - name: Install dependencies
         id: install
-        run: |
-          npm ci
-          echo "✅ Dependencies installed successfully"
+        run: npm ci
         continue-on-error: true
 
       - name: Run ESLint
         id: lint
-        run: |
-          npm run lint
-          echo "✅ ESLint check passed"
+        run: npm run lint
         continue-on-error: true
 
       - name: Check server startup
         id: startup
         run: |
-          timeout 5s npm start || true
-          echo "✅ Server startup check completed"
+          timeout 5s npm start
+          echo "Server started successfully"
         env:
           NODE_ENV: production
         continue-on-error: true
 
       - name: Validation Summary
+        if: always()
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -60,13 +57,17 @@ jobs:
             ];
 
             let summary = '### PR 검증 결과\n\n';
+            let hasFailure = false;
 
             steps.forEach(step => {
               const icon = step.outcome === 'success' ? '✅' : '❌';
               summary += `- ${icon} ${step.name}\n`;
+              if (step.outcome !== 'success') {
+                hasFailure = true;
+              }
             });
 
-            summary += `[상세 로그 확인](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            summary += `\n[상세 로그 확인](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -75,12 +76,17 @@ jobs:
               body: summary
             });
 
-      - name: Fail if any step failed
+            if (hasFailure) {
+              core.setFailed('One or more validation steps failed');
+            }
+
+      - name: Final validation check
+        if: always()
         run: |
           if [[ "${{ steps.install.outcome }}" != "success" ]] || 
               [[ "${{ steps.lint.outcome }}" != "success" ]] || 
               [[ "${{ steps.startup.outcome }}" != "success" ]]; then
-            echo "❌ One or more validation steps failed"
+            echo "❌ Validation failed - blocking PR merge"
             exit 1
           fi
           echo "✅ All validation steps passed"
