@@ -5,7 +5,7 @@
   "main": "server.js",
   "private": true,
   "scripts": {
-    "start": "echo 'Error: Please use npm run start:local or npm run start:prod' && exit 1",
+    "start": "npm run start:local",
     "start:local": "NODE_ENV=local node -r dotenv/config server.js dotenv_config_path=.env",
     "start:prod": "NODE_ENV=production node -r dotenv/config server.js dotenv_config_path=.env.prod",
     "lint": "eslint .",

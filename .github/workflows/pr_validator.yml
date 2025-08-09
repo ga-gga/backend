@@ -7,59 +7,75 @@ on:
       - main
 
 jobs:
-  build:
-    name: Lint & Startup Validator
+  validate:
+    name: Code Quality Validator
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read        
-      pull-requests: write  
-    
+      contents: read
+      pull-requests: write
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        
+        uses: actions/checkout@v4
+
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "23"
-          cache: "npm"
-          
+          node-version: '23'
+          cache: 'npm'
+
       - name: Install dependencies
+        id: install
         run: npm ci
-        
+        continue-on-error: true
+
       - name: Run ESLint
+        id: lint
         run: npm run lint
+        continue-on-error: true
 
-      - name: Check server startup
+      - name: Validation Summary
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const steps = [
+              { name: 'Dependencies', outcome: '${{ steps.install.outcome }}' },
+              { name: 'ESLint', outcome: '${{ steps.lint.outcome }}' }
+            ];
+
+            let summary = '### PR 검증 결과\n\n';
+            let hasFailure = false;
+
+            steps.forEach(step => {
+              const icon = step.outcome === 'success' ? '✅' : '❌';
+              summary += `- ${icon} ${step.name}\n`;
+              if (step.outcome !== 'success') {
+                hasFailure = true;
+              }
+            });
+
+            summary += `\n[상세 로그 확인](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
+
+            if (hasFailure) {
+              core.setFailed('One or more validation steps failed');
+            }
+
+      - name: Final validation check
+        if: always()
         run: |
-          timeout 5s npm start || true
-          echo "Server startup check completed"
-        env:
-          NODE_ENV: production
-
-      - name: Success Comment
-        if: ${{ success() }}
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '### 결과: ✅ 성공\n\n- ✅ 의존성 설치 완료\n- ✅ ESLint 검사 통과\n- ✅ 서버 시작 확인 완료'
-            })
-            
-      - name: Failure Comment
-        if: ${{ failure() }}
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `### 결과: ❌ 실패\n\n[상세 로그](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})를 확인하세요.`
-            })
+          if [[ "${{ steps.install.outcome }}" != "success" ]] || 
+              [[ "${{ steps.lint.outcome }}" != "success" ]]; then
+            echo "❌ Validation failed - blocking PR merge"
+            exit 1
+          fi
+          echo "✅ All validation steps passed"
