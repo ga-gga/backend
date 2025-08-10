@@ -9,12 +9,8 @@ on:
         default: 'none'
         type: choice
         options:
+          - none
           - production
-      confirm:
-        description: 'I confirm this deployment'
-        required: true
-        type: boolean
-        default: false
 
 jobs:
   test:
@@ -42,7 +38,7 @@ jobs:
     if: |
       github.ref == 'refs/heads/main' &&
       github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.confirm == 'true'
+      github.event.inputs.environment == 'production'
 
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +47,7 @@ jobs:
         run: |
           echo "Deployment initiated"
           echo "Event: ${{ github.event_name }}"
-          echo "Environment: ${{ github.event.inputs.environment || 'production' }}"
+          echo "Environment: ${{ github.event.inputs.environment }}"
           echo "Triggered by: ${{ github.actor }}"
 
       - name: Setup Node.js
