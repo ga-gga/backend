@@ -13,3 +13,14 @@ fi
 if ! command -v jq &> /dev/null; then
     sudo dnf install -y jq
 fi
+
+if ! command -v node &> /dev/null; then
+    curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+    sudo dnf install -y nodejs
+fi
+
+if ! command -v pm2 &> /dev/null; then
+    sudo npm install -g pm2
+fi
+
+echo "before_install.sh completed"
