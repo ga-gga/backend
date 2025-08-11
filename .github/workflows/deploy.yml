@@ -35,6 +35,9 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     if: |
       github.ref == 'refs/heads/main' &&
       github.event_name == 'workflow_dispatch' &&
