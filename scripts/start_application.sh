@@ -2,8 +2,9 @@ echo "Starting start_application.sh..."
 
 cd /opt/gagga-app || { echo "Failed to change directory"; exit 1; }
 
-REGION=$(curl -s --max-time 5 http://169.254.169.254/latest/meta-data/placement/region 2>/dev/null)
-echo "Using AWS Region: $REGION"
+TOKEN=$(curl -s --max-time 5 -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" 2>/dev/null)
+REGION=$(curl -s --max-time 5 -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/region 2>/dev/null)
+echo "AWS Region: $REGION"
 
 ENV_VARS=$(aws ssm get-parameters --region $REGION \
   --names "/gagga/prod/NODE_ENV" "/gagga/prod/PORT" \
