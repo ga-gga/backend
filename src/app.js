@@ -9,13 +9,15 @@ const { initializeDatabase, initializeStaticData, initializeScheduler } = requir
 const createApp = () => {
   const app = express();
 
-  app.use(express.json());
+  const apiRouter = express.Router();
 
-  app.use('/regions', koreanAddressRoutes);
-  app.use('/api-metadata', apiMetadataRoutes);
-  app.use('/main', mainRoutes);
-  app.use('/admin', adminRoutes);
-  app.use('/contents', contentsRoutes);
+  apiRouter.use('/regions', koreanAddressRoutes);
+  apiRouter.use('/api-metadata', apiMetadataRoutes);
+  apiRouter.use('/main', mainRoutes);
+  apiRouter.use('/admin', adminRoutes);
+  apiRouter.use('/contents', contentsRoutes);
+
+  app.use('/api', apiRouter);
 
   app.use((req, res, next) => {
     const error = new Error('Endpoint not found');
