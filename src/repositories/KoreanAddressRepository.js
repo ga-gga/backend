@@ -25,6 +25,18 @@ class KoreanAddressRepository {
     }
   }
 
+  async findByCode(regionCode) {
+    try {
+      const region = await KoreanAddress.findById(regionCode);
+      return region;
+    } catch (error) {
+      if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
+        throw new DatabaseError('Database connection failed');
+      }
+      throw new Error(`Failed to find region by code: ${error.message}`);
+    }
+  }
+
   async findGroupByLevel() {
     try {
       const result = await KoreanAddress.aggregate([
