@@ -3,17 +3,21 @@ const koreanAddressRoutes = require('./routes/koreanAddressRoutes');
 const apiMetadataRoutes = require('./routes/apiMetadataRoutes');
 const mainRoutes = require('./routes/mainRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const contentsRoutes = require('./routes/contentsRoutes');
 const { initializeDatabase, initializeStaticData, initializeScheduler } = require('./utils/loaders/appInitializer');
 
 const createApp = () => {
   const app = express();
 
-  app.use(express.json());
+  const apiRouter = express.Router();
 
-  app.use('/regions', koreanAddressRoutes);
-  app.use('/api-metadata', apiMetadataRoutes);
-  app.use('/main', mainRoutes);
-  app.use('/admin', adminRoutes);
+  apiRouter.use('/regions', koreanAddressRoutes);
+  apiRouter.use('/api-metadata', apiMetadataRoutes);
+  apiRouter.use('/main', mainRoutes);
+  apiRouter.use('/admin', adminRoutes);
+  apiRouter.use('/contents', contentsRoutes);
+
+  app.use('/api', apiRouter);
 
   app.use((req, res, next) => {
     const error = new Error('Endpoint not found');

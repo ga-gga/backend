@@ -1,7 +1,7 @@
 const Environment = require('../models/environment');
+const KoreanAddress = require('../models/koreanAddress');
 const DatabaseError = require('../errors/DatabaseError');
 
-// TODO : 너무 길고 복잡한 집계 과정의 개선이 필요.
 class EnvironmentAggregationRepository {
   async findFilteredContentsWithApiParameters(filterCondition) {
     try {
@@ -323,6 +323,126 @@ class EnvironmentAggregationRepository {
         throw new DatabaseError('Database connection failed');
       }
       throw new Error(`Failed to find environment stats: ${error.message}`);
+    }
+  }
+
+  async findContentsByRegion(regionCode, currentTime) {
+    try {
+      const region = await KoreanAddress.findById(regionCode);
+      if (!region) {
+        return [];
+      }
+
+      let dongMatchCondition;
+      switch (region.level) {
+        case 'EUPMYEONDONG':
+          dongMatchCondition = { _id: regionCode };
+          break;
+        case 'SIGUNGU':
+          dongMatchCondition = {
+            level: 'EUPMYEONDONG',
+            parentCode: regionCode,
+          };
+          break;
+        case 'SIDO':
+          dongMatchCondition = {
+            level: 'EUPMYEONDONG',
+            $expr: { $eq: [{ $substr: ['$_id', 0, 2] }, regionCode.substr(0, 2)] },
+          };
+          break;
+        default:
+          return [];
+      }
+
+      const result = await Environment.aggregate([
+        {
+          $lookup: {
+            from: 'apiparameters',
+            localField: 'apiParameterId',
+            foreignField: '_id',
+            as: 'apiParameter',
+          },
+        },
+        { $unwind: '$apiParameter' },
+        {
+          $match: {
+            'apiParameter.isActive': true,
+            'dataStatus.isComplete': true,
+          },
+        },
+        { $unwind: '$apiParameter.koreanAddressCodes' },
+        {
+          $lookup: {
+            from: 'koreanaddresses',
+            let: { dongCode: '$apiParameter.koreanAddressCodes' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$_id', '$$dongCode'] },
+                  ...dongMatchCondition,
+                },
+              },
+            ],
+            as: 'dongInfo',
+          },
+        },
+        { $match: { 'dongInfo.0': { $exists: true } } },
+        { $unwind: '$dongInfo' },
+        { $sort: { dataCollectedAt: -1 } },
+        {
+          $group: {
+            _id: '$apiParameterId',
+            latestData: { $first: '$$ROOT' },
+          },
+        },
+        {
+          $addFields: {
+            currentSkyStatus: {
+              $let: {
+                vars: {
+                  closestForecast: {
+                    $arrayElemAt: [
+                      {
+                        $sortArray: {
+                          input: {
+                            $map: {
+                              input: '$latestData.weatherForecast',
+                              as: 'forecast',
+                              in: {
+                                skyStatus: '$$forecast.skyStatus',
+                                timeDiff: {
+                                  $abs: {
+                                    $subtract: ['$$forecast.forecastTime', currentTime],
+                                  },
+                                },
+                              },
+                            },
+                          },
+                          sortBy: { timeDiff: 1 },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                },
+                in: '$$closestForecast.skyStatus',
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            apiParameter: '$latestData.apiParameter',
+            environmentData: '$latestData',
+            currentSkyStatus: 1,
+          },
+        },
+      ]);
+
+      return result || [];
+    } catch (error) {
+      console.error('Error in findContentsByRegion:', error);
+      return [];
     }
   }
 }

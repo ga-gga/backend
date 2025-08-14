@@ -15,6 +15,18 @@ class ContentFilterRepository {
     }
   }
 
+  async findById(id) {
+    try {
+      const contentFilter = await ContentFilter.findById(id);
+      return contentFilter;
+    } catch (error) {
+      if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
+        throw new DatabaseError('Database connection failed');
+      }
+      throw new Error(`Failed to find content filter by ID: ${error.message}`);
+    }
+  }
+
   async updateById(id, updateData) {
     try {
       const updatedContentFilter = await ContentFilter.findByIdAndUpdate(id, updateData, {

@@ -7,8 +7,11 @@ ga-gga-server/
 ├── README.md
 ├── package.json
 ├── package-lock.json
+├── appspec.yml
 ├── eslint.config.js
+├── .prettierrc.js
 ├── server.js
+├── .gitignore
 ├── LICENSE
 │
 ├── src/
@@ -43,12 +46,14 @@ ga-gga-server/
 │   │   ├── ApiMetadataRepository.js
 │   │   ├── ApiParameterRepository.js
 │   │   ├── ContentFilterRepository.js
+│   │   ├── EnvironmentAggregationRepository.js
 │   │   ├── EnvironmentRepository.js
 │   │   └── KoreanAddressRepository.js
 │   │
 │   ├── routes/
 │   │   ├── adminRoutes.js
 │   │   ├── apiMetadataRoutes.js
+│   │   ├── contentsRoutes.js
 │   │   ├── koreanAddressRoutes.js
 │   │   └── mainRoutes.js
 │   │
@@ -59,6 +64,7 @@ ga-gga-server/
 │   │   ├── ApiMetadataService.js
 │   │   ├── ApiParameterService.js
 │   │   ├── ContentFilterService.js
+│   │   ├── ContentsService.js
 │   │   ├── EnvironmentService.js
 │   │   ├── KoreanAddressService.js
 │   │   └── MainService.js
@@ -91,52 +97,41 @@ ga-gga-server/
 
 ---
 
-### API
-
-#### Region
-
-- GET - /regions/hierarchy
-  - 목적: 행정구역 계층별 그룹 조회
-
-</br>
-
-#### Main
-
-- GET - /main
-  - 목적: 메인페이지 데이터 조회
-
-</br>
-
-#### Admin
-
-###### API Metadata
-
-- GET - /api-metadata
-  - 목적: API 메타데이터 목록 조회
-
-##### Environment Data
-
-- POST - /admin/environment-data
-  - 목적: 환경 데이터 생성
-
-##### API Metadata Management
-
-- POST - /admin/api-metadata
-  - 목적: API 메타데이터 생성
-
-##### Content Filter Management
-
-- POST - /admin/content-filters
-  - 목적: 콘텐츠 필터 생성
-- PUT - /admin/content-filters/:id
-  - 목적: 콘텐츠 필터 수정
-
-</br>
-
-### Scheduling Information
-
-#### Data Collection Scheduler
+### Data Collection Scheduler
 
 - **실행 주기**: 매 10분마다 (`*/10 * * * *`)
 - **수집 데이터**: 서울시 실시간 도시 환경 데이터
 - **API**: seoul_real_time_city_data
+
+---
+
+### 문제 자가 진단
+
+#### NoSQL을 RDB처럼 사용
+
+```
+Environment (환경데이터)
+    ↓ (참조)
+ApiParameter (장소정보)
+    ↓ (참조)
+KoreanAddress (주소정보)
+```
+
+```
+// 지역별 조인 시
+1. Environment 컬렉션 전체 스캔
+2. ApiParameter 조인 (N개)
+3. KoreanAddress 조인 (N*M개)
+4. 메모리에서 그룹핑/정렬
+5. 복잡한 날씨 계산
+```
+
+- 집계 파이프라인의 말도안되는 가독성
+- join 대신 `$lookup` 사용으로 인한 성능 저하
+- 복잡한 집계로 인한 샤딩 어려움
+- $O(N*M)$ 복잡도
+
+#### 개선 방향
+
+1.  현재 구조를 계속 사용(또는 약간의 개선)할 것이라면 PostgreSQL 같은 RDB로 전환
+2.  NoSQL의 장점을 살린다면 임베딩 구조로 재설계
